@@ -1,0 +1,392 @@
+# Asset-Organizer / Populle Project
+
+## Project Overview
+
+This is a **pnpm workspace monorepo** containing a full-stack world population visualization application called **Populle**. The project uses TypeScript throughout and consists of an Express.js API backend and a React + Vite frontend.
+
+### Main Application: Populle
+
+Populle (hosted at populle.com) is an interactive world population visualization app featuring:
+
+- **3D Globe** (Home): Interactive globe with country population as colored points and city markers using react-globe.gl
+- **World Map** (Map): Choropleth map with d3-scale color coding by population using react-simple-maps
+- **Top Cities** (Cities): Animated ranked list of top cities by population with framer-motion
+- **Compare** (Compare): Line charts comparing up to 5 countries/cities from 1800-2100 using recharts
+- **Dashboard** (Stats): Global statistics with pie charts and continent breakdowns
+- **Quiz** (Quiz): Population quiz game with 10 rounds and streak bonuses
+- **Year Slider**: Non-linear timeline from 10,000 BCE to 2100 CE with historical event markers
+
+### Data Sources
+
+- UN World Population Prospects 2024
+- UN World Urbanization Prospects 2025
+- HYDE 3.3 database (ancient world population: 10,000 BCE to 1800 CE)
+- McEvedy & Jones historical estimates
+- Maddison Project data
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Monorepo** | pnpm workspaces |
+| **Package Manager** | pnpm (enforced - npm/yarn blocked) |
+| **Node.js** | Version 24 |
+| **TypeScript** | ~5.9.2 |
+| **Frontend** | React 19 + Vite 7 + TypeScript |
+| **Styling** | Tailwind CSS 4 + Radix UI components |
+| **Backend** | Express 5 |
+| **Database** | PostgreSQL + Drizzle ORM |
+| **Validation** | Zod v4, drizzle-zod |
+| **API Codegen** | Orval (OpenAPI → React Query hooks + Zod schemas) |
+| **Build** | esbuild (API server), Vite (frontend) |
+| **Animation** | framer-motion, react-globe.gl, react-simple-maps |
+| **Charts** | recharts, d3-scale |
+
+---
+
+## Project Structure
+
+```
+Asset-Organizer/
+├── artifacts/                  # Deployable applications
+│   ├── api-server/            # Express API server (@workspace/api-server)
+│   │   ├── src/
+│   │   │   ├── index.ts       # Entry point
+│   │   │   ├── app.ts         # Express app setup
+│   │   │   ├── routes/        # API routes
+│   │   │   │   ├── index.ts   # Route aggregator
+│   │   │   │   ├── health.ts  # Health check endpoint
+│   │   │   │   └── population.ts  # Population data endpoints
+│   │   │   └── data/          # Static population data
+│   │   │       └── populationData.ts
+│   │   ├── build.ts           # esbuild configuration
+│   │   └── package.json
+│   ├── populle/               # React frontend (@workspace/populle)
+│   │   ├── src/
+│   │   │   ├── main.tsx       # Entry point
+│   │   │   ├── App.tsx        # Root component
+│   │   │   ├── pages/         # Page components
+│   │   │   │   ├── Home.tsx   # 3D Globe view
+│   │   │   │   ├── Map.tsx    # 2D Choropleth map
+│   │   │   │   ├── Cities.tsx # Top cities list
+│   │   │   │   ├── Compare.tsx# Comparison charts
+│   │   │   │   ├── Stats.tsx  # Dashboard stats
+│   │   │   │   ├── Quiz.tsx   # Population quiz
+│   │   │   │   └── not-found.tsx
+│   │   │   ├── components/    # Shared components
+│   │   │   │   ├── layout/    # Layout components
+│   │   │   │   │   ├── Layout.tsx
+│   │   │   │   │   ├── Sidebar.tsx
+│   │   │   │   │   └── YearSlider.tsx
+│   │   │   │   └── ui/        # Radix UI + Tailwind components
+│   │   │   ├── lib/           # Utilities
+│   │   │   │   ├── timeUtils.ts      # Year/slider conversions
+│   │   │   │   └── countryUtils.ts   # ISO codes, flags
+│   │   │   ├── hooks/         # Custom React hooks
+│   │   │   └── context/       # React context providers
+│   │   ├── vite.config.ts     # Vite configuration
+│   │   └── package.json
+│   └── mockup-sandbox/        # Mockup/testing artifact
+├── lib/                       # Shared libraries
+│   ├── api-spec/              # OpenAPI spec + Orval config (@workspace/api-spec)
+│   │   ├── openapi.yaml       # API specification
+│   │   ├── orval.config.ts    # Code generation config
+│   │   └── package.json
+│   ├── api-client-react/      # Generated React Query hooks (@workspace/api-client-react)
+│   │   └── src/
+│   │       ├── generated/     # Auto-generated by Orval
+│   │       └── custom-fetch.ts
+│   ├── api-zod/               # Generated Zod schemas (@workspace/api-zod)
+│   │   └── src/
+│   │       └── generated/     # Auto-generated by Orval
+│   └── db/                    # Database schema + connection (@workspace/db)
+│       ├── src/
+│       │   ├── index.ts       # Pool + Drizzle instance
+│       │   └── schema/        # Database schemas
+│       │       └── index.ts
+│       └── drizzle.config.ts  # Drizzle Kit config
+├── scripts/                   # Utility scripts (@workspace/scripts)
+│   └── src/
+│       └── hello.ts
+├── package.json               # Root workspace configuration
+├── pnpm-workspace.yaml        # pnpm workspace definition
+├── tsconfig.base.json         # Shared TypeScript options
+├── tsconfig.json              # Root project references
+└── railway.json               # Railway deployment config
+```
+
+---
+
+## Build and Development Commands
+
+### Root Level Commands
+
+```bash
+# Install dependencies (pnpm enforced)
+pnpm install
+
+# Typecheck all packages (uses project references)
+pnpm run typecheck
+
+# Build all packages
+pnpm run build
+
+# Full build pipeline
+cd Asset-Organizer
+pnpm install
+pnpm run build
+```
+
+### API Server (@workspace/api-server)
+
+```bash
+# Development server with hot reload
+pnpm --filter @workspace/api-server run dev
+
+# Production build (outputs dist/index.cjs)
+pnpm --filter @workspace/api-server run build
+
+# Typecheck only
+pnpm --filter @workspace/api-server run typecheck
+```
+
+### Populle Frontend (@workspace/populle)
+
+```bash
+# Development server (Vite)
+pnpm --filter @workspace/populle run dev
+
+# Production build (outputs dist/public/)
+pnpm --filter @workspace/populle run build
+
+# Preview production build
+pnpm --filter @workspace/populle run serve
+
+# Typecheck only
+pnpm --filter @workspace/populle run typecheck
+```
+
+### Database (@workspace/db)
+
+```bash
+# Push schema to database
+pnpm --filter @workspace/db run push
+
+# Force push (destructive)
+pnpm --filter @workspace/db run push-force
+```
+
+### API Code Generation (@workspace/api-spec)
+
+```bash
+# Regenerate React Query hooks and Zod schemas from OpenAPI
+pnpm --filter @workspace/api-spec run codegen
+```
+
+---
+
+## TypeScript Configuration
+
+This project uses **TypeScript Project References** for fast, reliable builds across packages.
+
+### Key Rules
+
+1. **Always typecheck from the root**: Run `pnpm run typecheck` instead of `tsc` in individual packages. This ensures cross-package imports resolve correctly.
+
+2. **Project references**: When package A depends on package B, A's `tsconfig.json` must list B in its `references` array.
+
+3. **Declaration only**: TypeScript only emits `.d.ts` files (no JS). Actual bundling is handled by esbuild/Vite.
+
+4. **Composite projects**: All packages extend `tsconfig.base.json` which sets `composite: true`.
+
+### Base Configuration Highlights
+
+- `module`: esnext
+- `moduleResolution`: bundler
+- `target`: es2022
+- `strictNullChecks`: true
+- `strictFunctionTypes`: false
+- `strictPropertyInitialization`: true
+
+---
+
+## API Endpoints
+
+The API server exposes the following endpoints under `/api`:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/healthz` | Health check |
+| GET | `/population/countries?year=&continent=&variant=` | List countries with population |
+| GET | `/population/cities?year=&limit=&continent=` | List top cities |
+| GET | `/population/timeseries?locations=&type=&variant=` | Time series data |
+| GET | `/population/summary?year=` | World summary stats |
+| GET | `/population/search?q=&type=` | Search countries/cities |
+
+### Query Parameters
+
+- `year`: Integer from 1800-2100 (or -10000 to 2100 for summary)
+- `variant`: `"medium"` | `"high"` | `"low"` (population projection variant)
+- `continent`: Filter by continent name
+- `type`: `"country"` | `"city"` | `"auto"` | `"both"`
+
+---
+
+## Code Organization Conventions
+
+### Frontend (Populle)
+
+- **Pages**: Located in `artifacts/populle/src/pages/`, each corresponds to a route
+- **Layout Components**: `artifacts/populle/src/components/layout/`
+- **UI Components**: `artifacts/populle/src/components/ui/` (Radix UI + Tailwind patterns)
+- **Utilities**: `artifacts/populle/src/lib/`
+- **Custom Hooks**: `artifacts/populle/src/hooks/`
+- **Context**: `artifacts/populle/src/context/`
+
+### Backend (API Server)
+
+- **Routes**: `artifacts/api-server/src/routes/`, organized by resource
+- **Data**: Static data files in `artifacts/api-server/src/data/`
+- **Middleware**: `artifacts/api-server/src/middlewares/`
+
+### Shared Libraries
+
+- Use workspace protocol: `"@workspace/db": "workspace:*"`
+- Each library exports from `src/index.ts`
+- Schema files export Drizzle tables, insert schemas, and types
+
+---
+
+## Code Style Guidelines
+
+### Package Management
+
+- **Use pnpm only** - The root `package.json` enforces this via `preinstall` script
+- Catalog dependencies are defined in `pnpm-workspace.yaml` for consistency
+
+### TypeScript
+
+- Strict null checks enabled
+- Explicit return types on exported functions recommended
+- Use `type` keyword for type imports when possible
+- Prefer interface over type for object definitions
+
+### Imports
+
+- Frontend path aliases:
+  - `@/` → `src/`
+  - `@assets/` → `attached_assets/`
+- Use workspace imports for cross-package dependencies
+
+### Naming Conventions
+
+- React components: PascalCase
+- Hooks: camelCase starting with `use`
+- Utilities: camelCase
+- Constants: UPPER_SNAKE_CASE for true constants
+
+---
+
+## Testing
+
+**Note**: This project currently does not have an automated test suite configured. No test files (`.test.ts`, `.spec.ts`) are present in the codebase.
+
+Manual testing should be performed:
+1. Run `pnpm run typecheck` to verify type safety
+2. Test API endpoints manually or via the frontend
+3. Verify build outputs with `pnpm run build`
+
+---
+
+## Deployment
+
+### Railway Deployment
+
+The project is configured for Railway deployment via `railway.json`:
+
+```json
+{
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "npm install -g pnpm && pnpm install --frozen-lockfile && BASE_PATH=/ PORT=5173 pnpm --filter @workspace/populle run build && pnpm --filter @workspace/api-server run build"
+  },
+  "deploy": {
+    "startCommand": "node artifacts/api-server/dist/index.cjs",
+    "healthcheckPath": "/api/healthz",
+    "healthcheckTimeout": 60
+  }
+}
+```
+
+### Environment Variables
+
+Required environment variables:
+
+- `PORT`: Server port (required)
+- `DATABASE_URL`: PostgreSQL connection string (required by `@workspace/db`)
+- `NODE_ENV`: Set to `production` for production builds
+- `BASE_PATH`: Base path for Vite builds (default: `/`)
+
+### Production Build Output
+
+- API Server: `artifacts/api-server/dist/index.cjs`
+- Frontend: `artifacts/populle/dist/public/`
+
+---
+
+## Security Considerations
+
+1. **CORS**: Enabled globally on API server
+2. **Static file serving**: Only in production mode, serves frontend build
+3. **Database**: Uses connection pooling via `pg.Pool`
+4. **Input validation**: All API inputs validated with Zod schemas
+5. **No secrets in code**: Environment variables required for sensitive data
+
+---
+
+## Common Development Tasks
+
+### Adding a New API Endpoint
+
+1. Add route handler in `artifacts/api-server/src/routes/`
+2. Update OpenAPI spec in `lib/api-spec/openapi.yaml`
+3. Run `pnpm --filter @workspace/api-spec run codegen`
+4. Import generated Zod schemas from `@workspace/api-zod`
+5. Import generated hooks from `@workspace/api-client-react` (for frontend)
+
+### Adding a Database Table
+
+1. Create schema file in `lib/db/src/schema/`
+2. Export table, insert schema, and types
+3. Re-export from `lib/db/src/schema/index.ts`
+4. Run `pnpm --filter @workspace/db run push`
+
+### Adding a New Page
+
+1. Create component in `artifacts/populle/src/pages/`
+2. Add route in `App.tsx`
+3. Add navigation link in `Sidebar.tsx`
+
+---
+
+## Troubleshooting
+
+### Type errors across packages
+
+Run `pnpm run typecheck` from the root. Don't run `tsc` in individual packages.
+
+### Package not found
+
+Ensure you're using `pnpm` and not `npm`/`yarn`. The preinstall script blocks them.
+
+### Database connection errors
+
+Verify `DATABASE_URL` environment variable is set correctly.
+
+### Build failures
+
+1. Clear `node_modules` and reinstall: `rm -rf node_modules && pnpm install`
+2. Check TypeScript: `pnpm run typecheck`
+3. Ensure all workspace packages build successfully

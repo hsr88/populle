@@ -1,0 +1,349 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Populle World Population API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: population
+    description: Population data operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /population/countries:
+    get:
+      operationId: getCountryPopulation
+      tags: [population]
+      summary: Get country population data
+      description: Returns population data for all countries from 1950 to 2100
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1950
+            maximum: 2100
+        - name: continent
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: variant
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [medium, high, low]
+            default: medium
+      responses:
+        "200":
+          description: Country population data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CountryPopulationResponse"
+  /population/cities:
+    get:
+      operationId: getCityPopulation
+      tags: [population]
+      summary: Get city population data
+      description: Returns population data for cities, optionally filtered by year
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1950
+            maximum: 2100
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: continent
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: City population data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CityPopulationResponse"
+  /population/timeseries:
+    get:
+      operationId: getPopulationTimeseries
+      tags: [population]
+      summary: Get population timeseries for locations
+      description: Returns population timeseries for specified countries or cities over time
+      parameters:
+        - name: locations
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated list of country/city names
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [country, city]
+            default: country
+        - name: variant
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [medium, high, low]
+            default: medium
+      responses:
+        "200":
+          description: Population timeseries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeseriesResponse"
+  /population/summary:
+    get:
+      operationId: getPopulationSummary
+      tags: [population]
+      summary: Get world population summary
+      description: Returns global population stats for a given year
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1950
+            maximum: 2100
+            default: 2025
+      responses:
+        "200":
+          description: Population summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PopulationSummary"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    CountryData:
+      type: object
+      properties:
+        iso3:
+          type: string
+        name:
+          type: string
+        continent:
+          type: string
+        population:
+          type: number
+          description: Population in thousands
+        populationMillions:
+          type: number
+        density:
+          type: number
+          description: People per square km
+        lat:
+          type: number
+        lon:
+          type: number
+        year:
+          type: integer
+        growthRate:
+          type: number
+      required:
+        - iso3
+        - name
+        - continent
+        - population
+        - populationMillions
+        - year
+    CountryPopulationResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountryData"
+        year:
+          type: integer
+        totalCountries:
+          type: integer
+      required:
+        - data
+        - year
+        - totalCountries
+    CityData:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+        continent:
+          type: string
+        population:
+          type: number
+          description: Population in thousands
+        populationMillions:
+          type: number
+        lat:
+          type: number
+        lon:
+          type: number
+        year:
+          type: integer
+        rank:
+          type: integer
+        urbanizationLevel:
+          type: string
+          enum: [megacity, large, medium, small]
+      required:
+        - id
+        - name
+        - country
+        - continent
+        - population
+        - populationMillions
+        - lat
+        - lon
+        - year
+        - rank
+    CityPopulationResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/CityData"
+        year:
+          type: integer
+        totalCities:
+          type: integer
+      required:
+        - data
+        - year
+        - totalCities
+    TimeseriesPoint:
+      type: object
+      properties:
+        year:
+          type: integer
+        population:
+          type: number
+        populationMillions:
+          type: number
+        isProjection:
+          type: boolean
+      required:
+        - year
+        - population
+        - populationMillions
+        - isProjection
+    LocationTimeseries:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [country, city]
+        continent:
+          type: string
+        color:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimeseriesPoint"
+      required:
+        - name
+        - type
+        - continent
+        - data
+    TimeseriesResponse:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: "#/components/schemas/LocationTimeseries"
+        variant:
+          type: string
+      required:
+        - locations
+        - variant
+    PopulationSummary:
+      type: object
+      properties:
+        year:
+          type: integer
+        worldPopulation:
+          type: number
+        worldPopulationMillions:
+          type: number
+        urbanPopulationPercent:
+          type: number
+        largestCountry:
+          type: string
+        largestCity:
+          type: string
+        continentBreakdown:
+          type: array
+          items:
+            type: object
+            properties:
+              continent:
+                type: string
+              population:
+                type: number
+              populationMillions:
+                type: number
+              share:
+                type: number
+            required:
+              - continent
+              - population
+              - populationMillions
+              - share
+      required:
+        - year
+        - worldPopulation
+        - worldPopulationMillions
+        - urbanPopulationPercent
+        - largestCountry
+        - largestCity
+        - continentBreakdown

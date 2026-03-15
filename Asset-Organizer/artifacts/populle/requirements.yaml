@@ -1,0 +1,23 @@
+packages:
+  "react-globe.gl": "For the 3D interactive population globe visualization"
+  "react-simple-maps": "For the 2D world choropleth map"
+  "d3-scale": "For calculating color scales and sizes based on population data"
+  "@types/d3-scale": "Type definitions for d3-scale"
+  "recharts": "For the comparison timeseries and analytics charts"
+  "framer-motion": "For smooth layout animations, transitions, and cinematic depth"
+  "clsx": "For conditional class merging"
+  "tailwind-merge": "For resolving Tailwind CSS class conflicts"
+  "lucide-react": "For beautiful vector icons across the interface"
+
+images:
+  - path: "artifacts/populle/public/images/space-bg.png"
+    description: "Deep space cinematic background with subtle dark teal and indigo nebulae, high contrast, perfect for a dark mode data visualization app background."
+    aspect_ratio: "16:9"
+  - path: "artifacts/populle/public/images/logo.png"
+    description: "Abstract minimal geometric globe logo mark in glowing electric blue and cyan on a transparent background, modern tech startup style."
+    aspect_ratio: "1:1"
+
+notes:
+  - "The app assumes endpoints follow the generated Orval API hooks."
+  - "It uses react-globe.gl with unpkg texture URLs for rendering the Earth."
+  - "Global year and variant state is managed via Context API to sync all views."
