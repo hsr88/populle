@@ -11,6 +11,9 @@ import Cities from "@/pages/Cities";
 import Compare from "@/pages/Compare";
 import Stats from "@/pages/Stats";
 import Quiz from "@/pages/Quiz";
+import About from "@/pages/About";
+import FAQ from "@/pages/FAQ";
+import Privacy from "@/pages/Privacy";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,6 +33,9 @@ function Router() {
       <Route path="/compare" component={Compare} />
       <Route path="/stats" component={Stats} />
       <Route path="/quiz" component={Quiz} />
+      <Route path="/about" component={About} />
+      <Route path="/faq" component={FAQ} />
+      <Route path="/privacy" component={Privacy} />
       <Route component={NotFound} />
     </Switch>
   );

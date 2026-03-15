@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'wouter';
-import { Globe2, Map, Building2, LineChart, PieChart, Brain } from 'lucide-react';
+import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -55,6 +55,33 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        {/* SEO Links */}
+        <div className="px-3 mb-4">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
+            Information
+          </div>
+          <nav className="flex flex-col gap-1">
+            <Link href="/about" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Info className="w-4 h-4" />
+                <span>About</span>
+              </div>
+            </Link>
+            <Link href="/faq" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <HelpCircle className="w-4 h-4" />
+                <span>FAQ</span>
+              </div>
+            </Link>
+            <Link href="/privacy" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Shield className="w-4 h-4" />
+                <span>Privacy</span>
+              </div>
+            </Link>
+          </nav>
+        </div>
 
         {/* Footer info */}
         <div className="mt-auto px-4 space-y-3">
