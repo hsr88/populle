@@ -1,0 +1,8 @@
+.git
+node_modules
+.agents
+.local
+attached_assets
+.gitignore
+.replit
+.replitignore
