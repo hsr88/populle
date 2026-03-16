@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 
+const DEFAULT_TITLE = "Populle - World Population Visualization";
+const DEFAULT_DESCRIPTION = "Interactive 3D visualization of world population data from 10,000 BCE to 2100. Explore historical trends, compare countries, and see demographic projections.";
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -9,8 +12,8 @@ interface SEOProps {
 }
 
 export function SEO({ 
-  title = "Populle - World Population Visualization",
-  description = "Interactive 3D visualization of world population data from 10,000 BCE to 2100. Explore historical trends, compare countries, and see demographic projections.",
+  title = DEFAULT_TITLE,
+  description = DEFAULT_DESCRIPTION,
   keywords = "world population, demographics, population visualization, UN data, population growth, demographic data",
   ogImage = "/opengraph.jpg",
   ogType = "website"
@@ -48,7 +51,10 @@ export function SEO({
       meta.setAttribute('content', content);
     });
     
-    // Cleanup not needed as we want meta to persist
+    // Reset title on unmount
+    return () => {
+      document.title = DEFAULT_TITLE;
+    };
   }, [title, description, keywords, ogImage, ogType]);
   
   return null;

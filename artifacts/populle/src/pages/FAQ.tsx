@@ -55,7 +55,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <Layout>
+    <Layout hideYearSlider>
       <SEO
         title="FAQ | Populle - Frequently Asked Questions"
         description="Find answers to common questions about Populle's population data, sources, accuracy, and features. Learn how we visualize world demographics."

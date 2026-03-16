@@ -6,7 +6,7 @@ export default function Privacy() {
   const lastUpdated = "March 15, 2026";
 
   return (
-    <Layout>
+    <Layout hideYearSlider>
       <SEO
         title="Privacy Policy | Populle"
         description="Populle's privacy policy. Learn how we collect, use, and protect your data when using our world population visualization platform."

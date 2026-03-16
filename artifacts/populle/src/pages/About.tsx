@@ -4,7 +4,7 @@ import { SEO } from "@/components/SEO";
 
 export default function About() {
   return (
-    <Layout>
+    <Layout hideYearSlider>
       <SEO
         title="About Populle | World Population Visualization & Demographics"
         description="Discover Populle - an interactive platform visualizing world population data from 10,000 BCE to 2100. Explore demographics, compare countries, and understand humanity's growth."
