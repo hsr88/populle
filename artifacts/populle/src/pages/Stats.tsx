@@ -10,8 +10,9 @@ import {
 import {
   Globe2, Users, Building, MapPin, AlertTriangle,
   TrendingUp, TrendingDown, Minus, Clock, Trees,
-  Lightbulb,
+  Lightbulb, RefreshCw,
 } from 'lucide-react';
+import { useState } from 'react';
 import { getRandomFact } from '@/data/funFacts';
 import { formatYearFull, isAncient } from '@/lib/timeUtils';
 import { getFlagUrl } from '@/lib/countryUtils';
@@ -29,7 +30,14 @@ export default function Stats() {
   const ancient = isAncient(year);
   const prevYear = getPrevYear(year);
   const period = Math.max(1, year - prevYear);
-  const randomFact = getRandomFact();
+  const [randomFact, setRandomFact] = useState(getRandomFact());
+  const [isSpinning, setIsSpinning] = useState(false);
+  
+  const refreshFact = () => {
+    setIsSpinning(true);
+    setRandomFact(getRandomFact());
+    setTimeout(() => setIsSpinning(false), 500);
+  };
 
   const { data, isLoading, isError, refetch } = useGetPopulationSummary({ year });
   const { data: prevData } = useGetPopulationSummary({ year: prevYear });
@@ -84,11 +92,20 @@ export default function Stats() {
         {/* Did You Know? */}
         <div className="glass-panel rounded-xl p-4 border-l-4 border-accent">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-accent/10">
+            <div className="p-2 rounded-lg bg-accent/10 flex-shrink-0">
               <Lightbulb className="w-5 h-5 text-accent" />
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-accent mb-1">Did you know?</h3>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="text-sm font-semibold text-accent mb-1">Did you know?</h3>
+                <button
+                  onClick={refreshFact}
+                  className="p-1.5 rounded-lg hover:bg-accent/10 text-accent/60 hover:text-accent transition-colors"
+                  title="New fact"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isSpinning ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {randomFact}
               </p>
