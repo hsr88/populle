@@ -85,7 +85,8 @@ export function Sidebar() {
                   </div>
                 </Link>
                 
-                {/* Submenu for Map */}
+                {/* Submenu for Map - Hidden until data is ready */}
+                {/* 
                 {item.hasSubmenu && (
                   <AnimatePresence>
                     {expandedMap && isMapSection && (
@@ -96,7 +97,6 @@ export function Sidebar() {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        {/* Demographics */}
                         <div className="pl-4 mt-2">
                           <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-1 px-3">
                             Demographics
@@ -116,7 +116,6 @@ export function Sidebar() {
                           ))}
                         </div>
                         
-                        {/* Economy */}
                         <div className="pl-4 mt-2">
                           <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-1 px-3">
                             Economy
@@ -139,6 +138,7 @@ export function Sidebar() {
                     )}
                   </AnimatePresence>
                 )}
+                */}
               </div>
             );
           })}
