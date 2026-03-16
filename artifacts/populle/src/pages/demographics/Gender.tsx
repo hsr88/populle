@@ -26,7 +26,7 @@ export default function Gender() {
         {/* Coming Soon */}
         <div className="glass-panel rounded-2xl p-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/10 mb-6">
-            <Venn className="w-10 h-10 text-primary" />
+            <User className="w-10 h-10 text-primary" />
           </div>
           <h2 className="text-2xl font-semibold mb-3">Coming Soon</h2>
           <p className="text-muted-foreground max-w-lg mx-auto mb-6">

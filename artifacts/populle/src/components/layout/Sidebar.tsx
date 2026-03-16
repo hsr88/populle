@@ -1,19 +1,38 @@
 import { Link, useLocation } from 'wouter';
-import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Users, User, Globe, TrendingUp, MapPin, Plane } from 'lucide-react';
+import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Users, User, Globe, TrendingUp, MapPin, Plane, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', label: '3D Globe', icon: Globe2 },
-  { href: '/map', label: 'Map', icon: Map },
+  { href: '/map', label: 'Map', icon: Map, hasSubmenu: true },
   { href: '/cities', label: 'Cities', icon: Building2 },
   { href: '/compare', label: 'Compare', icon: LineChart },
   { href: '/stats', label: 'Dashboard', icon: PieChart },
   { href: '/quiz', label: 'Quiz', icon: Brain },
 ];
 
+const DEMOGRAPHICS_ITEMS = [
+  { href: '/demographics/age-pyramid', label: 'Age Pyramid', icon: Users },
+  { href: '/demographics/gender', label: 'Gender', icon: User },
+  { href: '/demographics/languages', label: 'Languages', icon: Globe },
+];
+
+const ECONOMY_ITEMS = [
+  { href: '/economy/gdp', label: 'GDP per Capita', icon: TrendingUp },
+  { href: '/economy/urbanization', label: 'Urbanization', icon: Building2 },
+  { href: '/economy/density', label: 'Density', icon: MapPin },
+  { href: '/economy/migration', label: 'Migration', icon: Plane },
+];
+
 export function Sidebar() {
   const [location] = useLocation();
+  const [expandedMap, setExpandedMap] = useState(true);
+
+  const isMapSection = location === '/map' || 
+    location.startsWith('/demographics') || 
+    location.startsWith('/economy');
 
   return (
     <>
@@ -29,92 +48,101 @@ export function Sidebar() {
           <span className="ml-3 font-bold text-xl text-white tracking-wide">POPULLE</span>
         </div>
 
-        <nav className="flex-1 flex flex-col gap-2 px-3">
+        <nav className="flex-1 flex flex-col gap-2 px-3 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
-            const isActive = location === item.href;
+            const isActive = location === item.href || (item.href === '/map' && isMapSection);
             return (
-              <Link key={item.href} href={item.href} className="outline-none">
-                <div
-                  className={cn(
-                    "relative flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer transition-all duration-300 group",
-                    isActive ? "text-white" : "text-muted-foreground hover:text-white hover:bg-white/5"
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-nav-desktop"
-                      className="absolute inset-0 bg-primary/20 border border-primary/30 rounded-xl"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                  <item.icon className={cn("w-6 h-6 relative z-10 transition-transform group-hover:scale-110", isActive && "text-primary")} />
-                  <span className="relative z-10 font-medium">{item.label}</span>
-                </div>
-              </Link>
+              <div key={item.href}>
+                <Link href={item.href} className="outline-none">
+                  <div
+                    className={cn(
+                      "relative flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer transition-all duration-300 group",
+                      isActive ? "text-white" : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-nav-desktop"
+                        className="absolute inset-0 bg-primary/20 border border-primary/30 rounded-xl"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                    <item.icon className={cn("w-6 h-6 relative z-10 transition-transform group-hover:scale-110", isActive && "text-primary")} />
+                    <span className="relative z-10 font-medium flex-1">{item.label}</span>
+                    {item.hasSubmenu && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setExpandedMap(!expandedMap);
+                        }}
+                        className="relative z-10 p-1 hover:bg-white/10 rounded-lg transition-colors"
+                      >
+                        <ChevronDown className={cn("w-4 h-4 transition-transform", expandedMap && "rotate-180")} />
+                      </button>
+                    )}
+                  </div>
+                </Link>
+                
+                {/* Submenu for Map */}
+                {item.hasSubmenu && (
+                  <AnimatePresence>
+                    {expandedMap && isMapSection && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        {/* Demographics */}
+                        <div className="pl-4 mt-2">
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-1 px-3">
+                            Demographics
+                          </div>
+                          {DEMOGRAPHICS_ITEMS.map((subItem) => (
+                            <Link key={subItem.href} href={subItem.href} className="outline-none">
+                              <div className={cn(
+                                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm",
+                                location === subItem.href 
+                                  ? "text-primary bg-primary/10" 
+                                  : "text-muted-foreground hover:text-white hover:bg-white/5"
+                              )}>
+                                <subItem.icon className="w-4 h-4" />
+                                <span>{subItem.label}</span>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                        
+                        {/* Economy */}
+                        <div className="pl-4 mt-2">
+                          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-1 px-3">
+                            Economy
+                          </div>
+                          {ECONOMY_ITEMS.map((subItem) => (
+                            <Link key={subItem.href} href={subItem.href} className="outline-none">
+                              <div className={cn(
+                                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm",
+                                location === subItem.href 
+                                  ? "text-primary bg-primary/10" 
+                                  : "text-muted-foreground hover:text-white hover:bg-white/5"
+                              )}>
+                                <subItem.icon className="w-4 h-4" />
+                                <span>{subItem.label}</span>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
             );
           })}
         </nav>
-
-        {/* Demographics */}
-        <div className="px-3 mb-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
-            Demographics
-          </div>
-          <nav className="flex flex-col gap-1">
-            <Link href="/demographics/age-pyramid" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Users className="w-4 h-4" />
-                <span>Age Pyramid</span>
-              </div>
-            </Link>
-            <Link href="/demographics/gender" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <User className="w-4 h-4" />
-                <span>Gender</span>
-              </div>
-            </Link>
-            <Link href="/demographics/languages" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Globe className="w-4 h-4" />
-                <span>Languages</span>
-              </div>
-            </Link>
-          </nav>
-        </div>
-
-        {/* Economy */}
-        <div className="px-3 mb-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
-            Economy
-          </div>
-          <nav className="flex flex-col gap-1">
-            <Link href="/economy/gdp" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <TrendingUp className="w-4 h-4" />
-                <span>GDP per Capita</span>
-              </div>
-            </Link>
-            <Link href="/economy/urbanization" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Building2 className="w-4 h-4" />
-                <span>Urbanization</span>
-              </div>
-            </Link>
-            <Link href="/economy/density" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <MapPin className="w-4 h-4" />
-                <span>Density</span>
-              </div>
-            </Link>
-            <Link href="/economy/migration" className="outline-none">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Plane className="w-4 h-4" />
-                <span>Migration</span>
-              </div>
-            </Link>
-          </nav>
-        </div>
 
         {/* Information */}
         <div className="px-3 mb-4">
@@ -180,7 +208,7 @@ export function Sidebar() {
         </div>
         <div className="flex items-center gap-1">
           {NAV_ITEMS.map((item) => {
-            const isActive = location === item.href;
+            const isActive = location === item.href || (item.href === '/map' && isMapSection);
             return (
               <Link key={item.href} href={item.href} className="outline-none">
                 <div className={cn(
