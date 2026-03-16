@@ -91,9 +91,15 @@ export function Sidebar() {
               An interactive visualization of world population from 10,000 BCE to 2100 CE — explore historical trends, compare countries, and see where humanity is headed.
             </p>
           </div>
-          <div className="border-t border-white/8 pt-3 space-y-0.5">
-            <p className="text-[10px] text-muted-foreground/50">Data: UN World Population Prospects 2024</p>
-            <p className="text-[10px] text-muted-foreground/50">Projections are estimates</p>
+          <div className="border-t border-white/8 pt-3">
+            <a 
+              href="https://ko-fi.com/hsr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[10px] text-primary hover:text-primary/80 transition-colors"
+            >
+              <span>☕</span> Support the author
+            </a>
           </div>
           <div className="border-t border-white/8 pt-2">
             <p className="text-[10px] text-muted-foreground/40">© Populle.com by <a href="https://github.com/hsr88" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">hsr</a></p>
