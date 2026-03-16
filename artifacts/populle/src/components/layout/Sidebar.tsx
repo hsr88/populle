@@ -96,7 +96,7 @@ export function Sidebar() {
             <p className="text-[10px] text-muted-foreground/50">Projections are estimates</p>
           </div>
           <div className="border-t border-white/8 pt-2">
-            <p className="text-[10px] text-muted-foreground/40">© Populle.com</p>
+            <p className="text-[10px] text-muted-foreground/40">© Populle.com by <a href="https://github.com/hsr88" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">hsr</a></p>
           </div>
         </div>
       </div>

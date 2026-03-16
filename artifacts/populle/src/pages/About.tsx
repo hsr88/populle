@@ -123,7 +123,7 @@ export default function About() {
             Have questions, suggestions, or found an error in our data? We'd love to hear from you.
           </p>
           <a 
-            href="mailto:contact@populle.com" 
+            href="mailto:hi@hsr.gg" 
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
           >
             Contact Us

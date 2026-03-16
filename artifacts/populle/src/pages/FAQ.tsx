@@ -93,7 +93,7 @@ export default function FAQ() {
         <div className="mt-10 text-center">
           <p className="text-muted-foreground mb-4">Still have questions?</p>
           <a 
-            href="mailto:contact@populle.com"
+            href="mailto:hi@hsr.gg"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 text-primary border border-primary/30 rounded-xl font-medium hover:bg-primary/20 transition-colors"
           >
             Contact Support
