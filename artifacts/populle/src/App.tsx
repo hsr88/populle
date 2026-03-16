@@ -14,6 +14,13 @@ import Quiz from "@/pages/Quiz";
 import About from "@/pages/About";
 import FAQ from "@/pages/FAQ";
 import Privacy from "@/pages/Privacy";
+import AgePyramid from "@/pages/demographics/AgePyramid";
+import Gender from "@/pages/demographics/Gender";
+import LanguagesPage from "@/pages/demographics/Languages";
+import GDP from "@/pages/economy/GDP";
+import Urbanization from "@/pages/economy/Urbanization";
+import Density from "@/pages/economy/Density";
+import Migration from "@/pages/economy/Migration";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,6 +43,18 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/faq" component={FAQ} />
       <Route path="/privacy" component={Privacy} />
+      
+      {/* Demographics */}
+      <Route path="/demographics/age-pyramid" component={AgePyramid} />
+      <Route path="/demographics/gender" component={Gender} />
+      <Route path="/demographics/languages" component={LanguagesPage} />
+      
+      {/* Economy */}
+      <Route path="/economy/gdp" component={GDP} />
+      <Route path="/economy/urbanization" component={Urbanization} />
+      <Route path="/economy/density" component={Density} />
+      <Route path="/economy/migration" component={Migration} />
+      
       <Route component={NotFound} />
     </Switch>
   );

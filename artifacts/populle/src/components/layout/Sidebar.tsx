@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'wouter';
-import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield } from 'lucide-react';
+import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Users, Venn, Languages, TrendingUp, MapPin, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -56,7 +56,67 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* SEO Links */}
+        {/* Demographics */}
+        <div className="px-3 mb-4">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
+            Demographics
+          </div>
+          <nav className="flex flex-col gap-1">
+            <Link href="/demographics/age-pyramid" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Users className="w-4 h-4" />
+                <span>Age Pyramid</span>
+              </div>
+            </Link>
+            <Link href="/demographics/gender" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Venn className="w-4 h-4" />
+                <span>Gender</span>
+              </div>
+            </Link>
+            <Link href="/demographics/languages" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Languages className="w-4 h-4" />
+                <span>Languages</span>
+              </div>
+            </Link>
+          </nav>
+        </div>
+
+        {/* Economy */}
+        <div className="px-3 mb-4">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
+            Economy
+          </div>
+          <nav className="flex flex-col gap-1">
+            <Link href="/economy/gdp" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <TrendingUp className="w-4 h-4" />
+                <span>GDP per Capita</span>
+              </div>
+            </Link>
+            <Link href="/economy/urbanization" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Building2 className="w-4 h-4" />
+                <span>Urbanization</span>
+              </div>
+            </Link>
+            <Link href="/economy/density" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <MapPin className="w-4 h-4" />
+                <span>Density</span>
+              </div>
+            </Link>
+            <Link href="/economy/migration" className="outline-none">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
+                <Plane className="w-4 h-4" />
+                <span>Migration</span>
+              </div>
+            </Link>
+          </nav>
+        </div>
+
+        {/* Information */}
         <div className="px-3 mb-4">
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground/50 font-medium mb-2 px-3">
             Information
