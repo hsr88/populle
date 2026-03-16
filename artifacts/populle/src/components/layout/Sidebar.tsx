@@ -122,7 +122,7 @@ export function Sidebar() {
         </div>
         <div className="flex items-center gap-1">
           {NAV_ITEMS.map((item) => {
-            const isActive = location === item.href || (item.href === '/map' && isMapSection);
+            const isActive = location === item.href;
             return (
               <Link key={item.href} href={item.href} className="outline-none">
                 <div className={cn(
