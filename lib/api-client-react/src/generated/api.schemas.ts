@@ -108,7 +108,7 @@ export interface PopulationSummary {
 
 export type GetCountryPopulationParams = {
   /**
-   * @minimum 1950
+   * @minimum 1800
    * @maximum 2100
    */
   year?: number;
@@ -127,7 +127,7 @@ export const GetCountryPopulationVariant = {
 
 export type GetCityPopulationParams = {
   /**
-   * @minimum 1950
+   * @minimum 1800
    * @maximum 2100
    */
   year?: number;
@@ -167,7 +167,7 @@ export const GetPopulationTimeseriesVariant = {
 
 export type GetPopulationSummaryParams = {
   /**
-   * @minimum 1950
+   * @minimum -10000
    * @maximum 2100
    */
   year?: number;

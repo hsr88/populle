@@ -10,7 +10,9 @@ import {
 import {
   Globe2, Users, Building, MapPin, AlertTriangle,
   TrendingUp, TrendingDown, Minus, Clock, Trees,
+  Lightbulb,
 } from 'lucide-react';
+import { getRandomFact } from '@/data/funFacts';
 import { formatYearFull, isAncient } from '@/lib/timeUtils';
 import { getFlagUrl } from '@/lib/countryUtils';
 
@@ -27,6 +29,7 @@ export default function Stats() {
   const ancient = isAncient(year);
   const prevYear = getPrevYear(year);
   const period = Math.max(1, year - prevYear);
+  const randomFact = getRandomFact();
 
   const { data, isLoading, isError, refetch } = useGetPopulationSummary({ year });
   const { data: prevData } = useGetPopulationSummary({ year: prevYear });
@@ -76,6 +79,21 @@ export default function Stats() {
         <div>
           <h1 className="text-3xl font-bold">Global Dashboard</h1>
           <p className="text-muted-foreground mt-1">World demographic overview for {formatYearFull(year)}</p>
+        </div>
+
+        {/* Did You Know? */}
+        <div className="glass-panel rounded-xl p-4 border-l-4 border-accent">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-accent/10">
+              <Lightbulb className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-accent mb-1">Did you know?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {randomFact}
+              </p>
+            </div>
+          </div>
         </div>
 
         {ancient && (

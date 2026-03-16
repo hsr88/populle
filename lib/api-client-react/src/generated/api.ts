@@ -111,7 +111,7 @@ export function useHealthCheck<
 }
 
 /**
- * Returns population data for all countries from 1950 to 2100
+ * Returns population data for all countries from 1800 to 2100
  * @summary Get country population data
  */
 export const getGetCountryPopulationUrl = (
@@ -417,7 +417,7 @@ export function useGetPopulationTimeseries<
 }
 
 /**
- * Returns global population stats for a given year
+ * Returns global population stats for a given year (supports ancient years from 10000 BCE)
  * @summary Get world population summary
  */
 export const getGetPopulationSummaryUrl = (

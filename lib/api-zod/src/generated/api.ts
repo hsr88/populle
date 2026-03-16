@@ -16,10 +16,10 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * Returns population data for all countries from 1950 to 2100
+ * Returns population data for all countries from 1800 to 2100
  * @summary Get country population data
  */
-export const getCountryPopulationQueryYearMin = 1950;
+export const getCountryPopulationQueryYearMin = 1800;
 export const getCountryPopulationQueryYearMax = 2100;
 
 export const getCountryPopulationQueryVariantDefault = `medium`;
@@ -59,7 +59,7 @@ export const GetCountryPopulationResponse = zod.object({
  * Returns population data for cities, optionally filtered by year
  * @summary Get city population data
  */
-export const getCityPopulationQueryYearMin = 1950;
+export const getCityPopulationQueryYearMin = 1800;
 export const getCityPopulationQueryYearMax = 2100;
 
 export const getCityPopulationQueryLimitDefault = 20;
@@ -141,11 +141,11 @@ export const GetPopulationTimeseriesResponse = zod.object({
 });
 
 /**
- * Returns global population stats for a given year
+ * Returns global population stats for a given year (supports ancient years from 10000 BCE)
  * @summary Get world population summary
  */
 export const getPopulationSummaryQueryYearDefault = 2025;
-export const getPopulationSummaryQueryYearMin = 1950;
+export const getPopulationSummaryQueryYearMin = -10000;
 export const getPopulationSummaryQueryYearMax = 2100;
 
 export const GetPopulationSummaryQueryParams = zod.object({

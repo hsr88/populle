@@ -8,7 +8,7 @@
 
 export type GetPopulationSummaryParams = {
   /**
-   * @minimum 1950
+   * @minimum -10000
    * @maximum 2100
    */
   year?: number;

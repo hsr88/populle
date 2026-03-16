@@ -8,7 +8,7 @@
 
 export type GetCityPopulationParams = {
   /**
-   * @minimum 1950
+   * @minimum 1800
    * @maximum 2100
    */
   year?: number;

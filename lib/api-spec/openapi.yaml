@@ -30,14 +30,14 @@ paths:
       operationId: getCountryPopulation
       tags: [population]
       summary: Get country population data
-      description: Returns population data for all countries from 1950 to 2100
+      description: Returns population data for all countries from 1800 to 2100
       parameters:
         - name: year
           in: query
           required: false
           schema:
             type: integer
-            minimum: 1950
+            minimum: 1800
             maximum: 2100
         - name: continent
           in: query
@@ -70,7 +70,7 @@ paths:
           required: false
           schema:
             type: integer
-            minimum: 1950
+            minimum: 1800
             maximum: 2100
         - name: limit
           in: query
@@ -131,14 +131,14 @@ paths:
       operationId: getPopulationSummary
       tags: [population]
       summary: Get world population summary
-      description: Returns global population stats for a given year
+      description: Returns global population stats for a given year (supports ancient years from 10000 BCE)
       parameters:
         - name: year
           in: query
           required: false
           schema:
             type: integer
-            minimum: 1950
+            minimum: -10000
             maximum: 2100
             default: 2025
       responses:
