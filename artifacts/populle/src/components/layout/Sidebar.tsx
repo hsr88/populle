@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'wouter';
-import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Users, Venn, Languages, TrendingUp, MapPin, Plane } from 'lucide-react';
+import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Users, User, Globe, TrendingUp, MapPin, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -70,13 +70,13 @@ export function Sidebar() {
             </Link>
             <Link href="/demographics/gender" className="outline-none">
               <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Venn className="w-4 h-4" />
+                <User className="w-4 h-4" />
                 <span>Gender</span>
               </div>
             </Link>
             <Link href="/demographics/languages" className="outline-none">
               <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm">
-                <Languages className="w-4 h-4" />
+                <Globe className="w-4 h-4" />
                 <span>Languages</span>
               </div>
             </Link>

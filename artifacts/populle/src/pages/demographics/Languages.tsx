@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/components/SEO";
-import { Languages, Info } from "lucide-react";
+import { Globe, Info } from "lucide-react";
 
 export default function LanguagesPage() {
   return (
@@ -15,7 +15,7 @@ export default function LanguagesPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <Languages className="w-8 h-8 text-primary" />
+            <Globe className="w-8 h-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold">Languages</h1>
           </div>
           <p className="text-muted-foreground text-lg">
