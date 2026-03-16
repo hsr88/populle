@@ -47,7 +47,7 @@ Dark futuristic banner with glowing 3D Earth globe at center, cyan and blue colo
 - Color: White with subtle cyan glow
 
 **Subtytuł:**
-- Text: "World Population Visualization"
+- Text: "World Population Visualization and Charts"
 - Size: 24-32px
 - Color: Muted cyan/gray
 
@@ -70,5 +70,5 @@ Dark futuristic banner with glowing 3D Earth globe at center, cyan and blue colo
 
 ## Tips:
 - Zapisz jako JPG (lepsza kompresja dla OG)
-- Nazwa pliku: `opengraph.jpg`
-- Umieść w folderze `public/` projektu
+- Nazwa pliku: `opengraph.png`
+- Umieść w folderze `public/images/` projektu
