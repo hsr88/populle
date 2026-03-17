@@ -48,3 +48,11 @@ Thumbs.db
 .cache/
 .local/
 attached_assets/
+
+# AI/Development files
+AGENTS.md
+IDEAS_ROADMAP.md
+CANVA_OG_PROMPT.md
+.agents/
+.replit
+.replitignore
