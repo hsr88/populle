@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'wouter';
-import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield } from 'lucide-react';
+import { Globe2, Map, Building2, LineChart, PieChart, Brain, Info, HelpCircle, Shield, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -82,6 +82,15 @@ export function Sidebar() {
                 <span>Privacy</span>
               </div>
             </Link>
+            <a 
+              href="https://github.com/hsr88/populle" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-sm"
+            >
+              <Github className="w-4 h-4" />
+              <span>GitHub</span>
+            </a>
           </nav>
         </div>
 
