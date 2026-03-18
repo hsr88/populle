@@ -42,6 +42,8 @@ function GlobeFallback({ data }: { data: any[] }) {
 
 let GlobeComponent: React.ComponentType<any> | null = null;
 
+type MapMode = 'globe' | 'heatmap' | 'night' | 'spread';
+
 function countryTooltip(d: any) {
   return `
     <div style="background:rgba(3,7,18,0.95);border:1px solid rgba(6,182,212,0.3);padding:14px 16px;border-radius:14px;box-shadow:0 20px 40px rgba(0,0,0,0.6);min-width:170px;pointer-events:none;font-family:sans-serif">
@@ -78,6 +80,7 @@ export default function Home() {
   const globeRef = useRef<any>();
   const [globeReady, setGlobeReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [mapMode, setMapMode] = useState<MapMode>('globe');
   const containerRef = useRef<HTMLDivElement>(null);
   const [GlobeLoaded, setGlobeLoaded] = useState<React.ComponentType<any> | null>(GlobeComponent);
 
