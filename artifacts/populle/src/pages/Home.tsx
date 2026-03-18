@@ -172,7 +172,6 @@ export default function Home() {
   };
   
   const nightTooltip = "Night Lights: Based on NASA's Black Marble satellite data showing Earth's city lights at night. Brighter areas indicate larger cities and higher population density.";
-  };
   
   const config = globeConfigs[mapMode];
   
