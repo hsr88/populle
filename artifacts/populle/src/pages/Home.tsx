@@ -162,12 +162,14 @@ export default function Home() {
       bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
       showBars: true,
       showHeatmap: true,
+      showCities: false,
     },
     night: {
       image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
       bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
       showBars: false,
       showHeatmap: false,
+      showCities: false,
     },
   };
   
@@ -222,8 +224,8 @@ export default function Home() {
           ringPropagationSpeed={1}
           ringRepeatPeriod={2000}
 
-          /* City dots - hidden in heatmap mode, shown in others */
-          labelsData={!config.showHeatmap ? cities : []}
+          /* City dots - hidden in heatmap and night modes */
+          labelsData={config.showCities !== false ? cities : []}
           labelLat="lat"
           labelLng="lon"
           labelAltitude={0.01}
