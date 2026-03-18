@@ -124,6 +124,45 @@ export default function Home() {
       .range(['rgba(6,182,212,0.4)', 'rgba(245,158,11,1)']);
   }, [data]);
 
+  // Heatmap color scale (red/yellow/green)
+  const heatmapColorScale = useMemo(() => {
+    if (!data?.data) return () => '#ef4444';
+    const maxPop = Math.max(...data.data.map((d: any) => d.populationMillions));
+    return scaleSequential<string>()
+      .domain([0, maxPop])
+      .interpolator((t: number) => {
+        // Red (high) -> Yellow (medium) -> Green (low)
+        if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
+        if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
+        return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
+      });
+  }, [data]);
+
+  // Generate spread arcs for population migration patterns
+  const spreadArcs = useMemo(() => {
+    if (!data?.data || mapMode !== 'spread') return [];
+    const countries = data.data;
+    const arcs: any[] = [];
+    // Create arcs from high population to growth areas
+    const highPopCountries = countries.filter((c: any) => c.populationMillions > 50).slice(0, 5);
+    const otherCountries = countries.filter((c: any) => c.populationMillions < 50).slice(0, 10);
+    
+    highPopCountries.forEach((source: any) => {
+      otherCountries.forEach((target: any, i: number) => {
+        if (i % 2 === 0) {
+          arcs.push({
+            startLat: source.lat,
+            startLng: source.lon,
+            endLat: target.lat,
+            endLng: target.lon,
+            color: `rgba(6, 182, 212, ${0.3 + Math.random() * 0.4})`,
+          });
+        }
+      });
+    });
+    return arcs;
+  }, [data, mapMode]);
+
   const cities = citiesData?.data || [];
   const fallback = <GlobeFallback data={data?.data || []} />;
 
@@ -166,45 +205,6 @@ export default function Home() {
     };
     
     const config = globeConfigs[mapMode];
-    
-    // Heatmap color scale (red/yellow/green)
-    const heatmapColorScale = useMemo(() => {
-      if (!data?.data) return () => '#ef4444';
-      const maxPop = Math.max(...data.data.map((d: any) => d.populationMillions));
-      return scaleSequential<string>()
-        .domain([0, maxPop])
-        .interpolator((t: number) => {
-          // Red (high) -> Yellow (medium) -> Green (low)
-          if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
-          if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
-          return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
-        });
-    }, [data]);
-    
-    // Generate spread arcs for population migration patterns
-    const spreadArcs = useMemo(() => {
-      if (!data?.data || mapMode !== 'spread') return [];
-      const countries = data.data;
-      const arcs: any[] = [];
-      // Create arcs from high population to growth areas
-      const highPopCountries = countries.filter((c: any) => c.populationMillions > 50).slice(0, 5);
-      const otherCountries = countries.filter((c: any) => c.populationMillions < 50).slice(0, 10);
-      
-      highPopCountries.forEach((source: any) => {
-        otherCountries.forEach((target: any, i: number) => {
-          if (i % 2 === 0) {
-            arcs.push({
-              startLat: source.lat,
-              startLng: source.lon,
-              endLat: target.lat,
-              endLng: target.lon,
-              color: `rgba(6, 182, 212, ${0.3 + Math.random() * 0.4})`,
-            });
-          }
-        });
-      });
-      return arcs;
-    }, [data, mapMode]);
     
     return (
       <GlobeErrorBoundary fallback={fallback}>
