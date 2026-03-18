@@ -42,7 +42,7 @@ function GlobeFallback({ data }: { data: any[] }) {
 
 let GlobeComponent: React.ComponentType<any> | null = null;
 
-type MapMode = 'globe' | 'heatmap' | 'night' | 'spread';
+type MapMode = 'globe' | 'heatmap' | 'night';
 
 function countryTooltip(d: any) {
   return `
@@ -124,42 +124,19 @@ export default function Home() {
       .range(['rgba(6,182,212,0.4)', 'rgba(245,158,11,1)']);
   }, [data]);
 
-  // Heatmap color scale (red/yellow/green) - simple version without interpolator
+  // Enhanced heatmap color scale with glow effect
   const heatmapColorScale = useMemo(() => {
     if (!data?.data) return () => '#ef4444';
     const maxPop = Math.max(...data.data.map((d: any) => d.populationMillions));
     return (pop: number) => {
       const t = pop / maxPop;
-      if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
-      if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
+      // More intense colors for heatmap
+      if (t > 0.7) return `rgba(239, 68, 68, ${0.6 + t * 0.4})`; // intense red
+      if (t > 0.4) return `rgba(245, 158, 11, ${0.5 + t * 0.5})`; // orange
+      if (t > 0.2) return `rgba(234, 179, 8, ${0.4 + t * 0.6})`; // yellow
       return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
     };
   }, [data]);
-
-  // Generate spread arcs for population migration patterns
-  const spreadArcs = useMemo(() => {
-    if (!data?.data || mapMode !== 'spread') return [];
-    const countries = data.data;
-    const arcs: any[] = [];
-    // Create arcs from high population to growth areas
-    const highPopCountries = countries.filter((c: any) => c.populationMillions > 50).slice(0, 5);
-    const otherCountries = countries.filter((c: any) => c.populationMillions < 50).slice(0, 10);
-    
-    highPopCountries.forEach((source: any) => {
-      otherCountries.forEach((target: any, i: number) => {
-        if (i % 2 === 0) {
-          arcs.push({
-            startLat: source.lat,
-            startLng: source.lon,
-            endLat: target.lat,
-            endLng: target.lon,
-            color: `rgba(6, 182, 212, ${0.3 + Math.random() * 0.4})`,
-          });
-        }
-      });
-    });
-    return arcs;
-  }, [data, mapMode]);
 
   const cities = citiesData?.data || [];
   const fallback = <GlobeFallback data={data?.data || []} />;
@@ -185,15 +162,16 @@ export default function Home() {
       bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
       showBars: true,
       showHeatmap: true,
-      showSpread: false,
     },
-    spread: {
-      image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+    night: {
+      image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
       bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
       showBars: false,
       showHeatmap: false,
-      showSpread: true,
     },
+  };
+  
+  const nightTooltip = "Night Lights: Based on NASA's Black Marble satellite data showing Earth's city lights at night. Brighter areas indicate larger cities and higher population density.";
   };
   
   const config = globeConfigs[mapMode];
@@ -229,14 +207,24 @@ export default function Home() {
             : colorScale(d.populationMillions)
           }
           pointRadius={(d: any) => config.showHeatmap 
-            ? Math.max(0.8, Math.min(d.populationMillions / 50, 2.5))
+            ? Math.max(1.5, Math.min(d.populationMillions / 30, 4.5)) // Larger for heatmap
             : 0.4
           }
           pointsMerge={false}
           pointLabel={countryTooltip}
 
-          /* City dots - visible in all modes */
-          labelsData={cities}
+          /* Heatmap rings effect - glowing circles around high population areas */
+          ringsData={config.showHeatmap ? data?.data?.filter((d: any) => d.populationMillions > 50) || [] : []}
+          ringLat="lat"
+          ringLng="lon"
+          ringAltitude={0.01}
+          ringColor={(d: any) => heatmapColorScale(d.populationMillions)}
+          ringMaxRadius={3}
+          ringPropagationSpeed={1}
+          ringRepeatPeriod={2000}
+
+          /* City dots - hidden in heatmap mode, shown in others */
+          labelsData={!config.showHeatmap ? cities : []}
           labelLat="lat"
           labelLng="lon"
           labelAltitude={0.01}
@@ -248,13 +236,9 @@ export default function Home() {
           labelLabel={cityTooltip}
           labelResolution={6}
           
-          /* Spread mode - arcs showing population flow */
-          arcsData={config.showSpread ? spreadArcs : []}
-          arcColor="color"
-          arcDashLength={0.4}
-          arcDashGap={0.2}
-          arcDashAnimateTime={2000}
-          arcStroke={0.5}
+          /* Night mode - brighter glow effect */
+          atmosphereColor={config.showHeatmap ? undefined : '#06b6d4'}
+          atmosphereAltitude={config.showHeatmap ? undefined : 0.15}
         />
       </GlobeErrorBoundary>
     );
@@ -289,10 +273,9 @@ export default function Home() {
         {/* Map Mode Switcher */}
         <div className="hidden lg:flex absolute top-4 right-4 z-10 flex-col gap-2">
           {[
-            { id: 'globe', icon: Globe2, label: '3D Globe', color: 'primary' },
-            { id: 'heatmap', icon: Map, label: 'Heatmap', color: 'rose' },
-            { id: 'night', icon: Moon, label: 'Night Lights', color: 'amber' },
-            { id: 'spread', icon: Radio, label: 'Spread Map', color: 'emerald' },
+            { id: 'globe', icon: Globe2, label: '3D Globe' },
+            { id: 'heatmap', icon: Map, label: 'Heatmap' },
+            { id: 'night', icon: Moon, label: 'Night Lights', tooltip: nightTooltip },
           ].map((mode) => {
             const isActive = mapMode === mode.id;
             const Icon = mode.icon;
@@ -300,10 +283,10 @@ export default function Home() {
               <button
                 key={mode.id}
                 onClick={() => setMapMode(mode.id as MapMode)}
-                className={`glass-panel p-3 rounded-xl flex items-center gap-3 transition-all min-w-[140px] cursor-pointer ${
+                className={`glass-panel p-3 rounded-xl flex items-center gap-3 transition-all min-w-[140px] cursor-pointer text-left ${
                   isActive ? 'border-primary/50 bg-primary/10' : 'hover:bg-white/5'
                 }`}
-                title={mode.label}
+                title={(mode as any).tooltip || mode.label}
               >
                 <div className={`p-2 rounded-lg ${isActive ? 'bg-primary/20 text-primary' : 'bg-white/10 text-muted-foreground'}`}>
                   <Icon className="w-4 h-4" />
