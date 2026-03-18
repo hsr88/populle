@@ -124,18 +124,16 @@ export default function Home() {
       .range(['rgba(6,182,212,0.4)', 'rgba(245,158,11,1)']);
   }, [data]);
 
-  // Heatmap color scale (red/yellow/green)
+  // Heatmap color scale (red/yellow/green) - simple version without interpolator
   const heatmapColorScale = useMemo(() => {
     if (!data?.data) return () => '#ef4444';
     const maxPop = Math.max(...data.data.map((d: any) => d.populationMillions));
-    return scaleSequential<string>()
-      .domain([0, maxPop])
-      .interpolator((t: number) => {
-        // Red (high) -> Yellow (medium) -> Green (low)
-        if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
-        if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
-        return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
-      });
+    return (pop: number) => {
+      const t = pop / maxPop;
+      if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
+      if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
+      return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
+    };
   }, [data]);
 
   // Generate spread arcs for population migration patterns
@@ -166,45 +164,46 @@ export default function Home() {
   const cities = citiesData?.data || [];
   const fallback = <GlobeFallback data={data?.data || []} />;
 
-  const innerContent = (() => {
+  // Globe configurations based on map mode
+  const globeConfigs = {
+    globe: {
+      image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+      bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+      showBars: true,
+      showHeatmap: false,
+      showSpread: false,
+    },
+    night: {
+      image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
+      bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+      showBars: false,
+      showHeatmap: false,
+      showSpread: false,
+    },
+    heatmap: {
+      image: 'https://unpkg.com/three-globe/example/img/earth-dark.jpg',
+      bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+      showBars: true,
+      showHeatmap: true,
+      showSpread: false,
+    },
+    spread: {
+      image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+      bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+      showBars: false,
+      showHeatmap: false,
+      showSpread: true,
+    },
+  };
+  
+  const config = globeConfigs[mapMode];
+  
+  // Render globe content based on state
+  const renderGlobeContent = () => {
     if (isAncient(year)) return <AncientEraPanel year={year} pageName="3D Globe & country" />;
     if (isLoading) return <LoadingScreen message="Initializing 3D Environment..." />;
     if (isError) return <ErrorState error={null} retry={() => refetch()} />;
     if (!GlobeLoaded) return fallback;
-    
-    // Different globe configurations based on map mode
-    const globeConfigs = {
-      globe: {
-        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
-        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-        showBars: true,
-        showHeatmap: false,
-        showSpread: false,
-      },
-      night: {
-        image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
-        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-        showBars: false,
-        showHeatmap: false,
-        showSpread: false,
-      },
-      heatmap: {
-        image: 'https://unpkg.com/three-globe/example/img/earth-dark.jpg',
-        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-        showBars: true,
-        showHeatmap: true,
-        showSpread: false,
-      },
-      spread: {
-        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
-        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-        showBars: false,
-        showHeatmap: false,
-        showSpread: true,
-      },
-    };
-    
-    const config = globeConfigs[mapMode];
     
     return (
       <GlobeErrorBoundary fallback={fallback}>
@@ -259,7 +258,7 @@ export default function Home() {
         />
       </GlobeErrorBoundary>
     );
-  })();
+  };
 
   return (
     <Layout>
@@ -324,7 +323,7 @@ export default function Home() {
         </div>
 
         <div className="flex-1 w-full rounded-2xl overflow-hidden glass-panel border border-white/5" ref={containerRef}>
-          {innerContent}
+          {renderGlobeContent()}
         </div>
       </div>
     </Layout>
