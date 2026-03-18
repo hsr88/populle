@@ -7,7 +7,8 @@
 
 [Live Demo →](https://populle.com)
 
-![Populle Screenshot](https://populle.com/images/og-image.png)
+<img width="800" height="496" alt="POPULLE" src="https://github.com/user-attachments/assets/a3d82fff-4cd3-4872-be07-df90cbb48a27" />
+
 
 ## Features
 
