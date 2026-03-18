@@ -5,7 +5,7 @@ import { useGetCountryPopulation, useGetCityPopulation } from '@workspace/api-cl
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation } from '@/lib/utils';
 import { scaleSequential } from 'd3-scale';
-import { Globe2 } from 'lucide-react';
+import { Globe2, Map, Sun, Moon, Radio } from 'lucide-react';
 import { AncientEraPanel } from '@/components/ui/AncientEraPanel';
 import { isAncient } from '@/lib/timeUtils';
 
@@ -129,19 +129,46 @@ export default function Home() {
     if (isLoading) return <LoadingScreen message="Initializing 3D Environment..." />;
     if (isError) return <ErrorState error={null} retry={() => refetch()} />;
     if (!GlobeLoaded) return fallback;
+    
+    // Different globe configurations based on map mode
+    const globeConfigs = {
+      globe: {
+        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+        showBars: true,
+      },
+      night: {
+        image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
+        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+        showBars: false,
+      },
+      heatmap: {
+        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+        showBars: true,
+      },
+      spread: {
+        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+        bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
+        showBars: true,
+      },
+    };
+    
+    const config = globeConfigs[mapMode];
+    
     return (
       <GlobeErrorBoundary fallback={fallback}>
         <GlobeLoaded
           ref={globeRef}
           width={dimensions.width}
           height={dimensions.height}
-          globeImageUrl="https://unpkg.com/three-globe/example/img/earth-night.jpg"
-          bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
+          globeImageUrl={config.image}
+          bumpImageUrl={config.bump}
           backgroundImageUrl="https://unpkg.com/three-globe/example/img/night-sky.png"
           onGlobeReady={() => setGlobeReady(true)}
 
-          /* Country bars */
-          pointsData={data?.data || []}
+          /* Country bars - hidden in night mode */
+          pointsData={config.showBars ? data?.data || [] : []}
           pointLat="lat"
           pointLng="lon"
           pointAltitude={(d: any) => Math.max(0.02, Math.min(d.populationMillions / 300, 0.6))}
@@ -150,7 +177,7 @@ export default function Home() {
           pointsMerge={false}
           pointLabel={countryTooltip}
 
-          /* City dots */
+          /* City dots - always visible */
           labelsData={cities}
           labelLat="lat"
           labelLng="lon"
@@ -191,6 +218,38 @@ export default function Home() {
               Cities
             </span>
           </div>
+        </div>
+
+        {/* Map Mode Switcher */}
+        <div className="hidden lg:flex absolute top-4 right-4 z-10 flex-col gap-2">
+          {[
+            { id: 'globe', icon: Globe2, label: '3D Globe', color: 'primary' },
+            { id: 'heatmap', icon: Map, label: 'Heatmap', color: 'rose', disabled: true },
+            { id: 'night', icon: Moon, label: 'Night Lights', color: 'amber' },
+            { id: 'spread', icon: Radio, label: 'Spread Map', color: 'emerald', disabled: true },
+          ].map((mode) => {
+            const isActive = mapMode === mode.id;
+            const Icon = mode.icon;
+            return (
+              <button
+                key={mode.id}
+                onClick={() => !mode.disabled && setMapMode(mode.id as MapMode)}
+                disabled={mode.disabled}
+                className={`glass-panel p-3 rounded-xl flex items-center gap-3 transition-all min-w-[140px] ${
+                  isActive ? 'border-primary/50 bg-primary/10' : 'hover:bg-white/5'
+                } ${mode.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                title={mode.disabled ? `${mode.label} - Coming Soon` : mode.label}
+              >
+                <div className={`p-2 rounded-lg ${isActive ? `bg-${mode.color}/20 text-${mode.color}` : 'bg-white/10 text-muted-foreground'}`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
+                  {mode.label}
+                  {mode.disabled && <span className="block text-[10px] opacity-60">Soon</span>}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Mobile title */}
