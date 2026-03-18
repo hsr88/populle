@@ -4,7 +4,7 @@ import { usePopulationState } from '@/context/PopulationContext';
 import { useGetCountryPopulation, useGetCityPopulation } from '@workspace/api-client-react';
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation } from '@/lib/utils';
-import { scaleSequential } from 'd3-scale';
+import { scaleSequential, interpolateRgb } from 'd3-scale';
 import { Globe2, Map, Sun, Moon, Radio } from 'lucide-react';
 import { AncientEraPanel } from '@/components/ui/AncientEraPanel';
 import { isAncient } from '@/lib/timeUtils';
@@ -136,25 +136,72 @@ export default function Home() {
         image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
         bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
         showBars: true,
+        showHeatmap: false,
+        showSpread: false,
       },
       night: {
         image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
         bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
         showBars: false,
+        showHeatmap: false,
+        showSpread: false,
       },
       heatmap: {
-        image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+        image: 'https://unpkg.com/three-globe/example/img/earth-dark.jpg',
         bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
         showBars: true,
+        showHeatmap: true,
+        showSpread: false,
       },
       spread: {
         image: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
         bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-        showBars: true,
+        showBars: false,
+        showHeatmap: false,
+        showSpread: true,
       },
     };
     
     const config = globeConfigs[mapMode];
+    
+    // Heatmap color scale (red/yellow/green)
+    const heatmapColorScale = useMemo(() => {
+      if (!data?.data) return () => '#ef4444';
+      const maxPop = Math.max(...data.data.map((d: any) => d.populationMillions));
+      return scaleSequential<string>()
+        .domain([0, maxPop])
+        .interpolator((t: number) => {
+          // Red (high) -> Yellow (medium) -> Green (low)
+          if (t > 0.7) return `rgba(239, 68, 68, ${0.3 + t * 0.7})`; // red
+          if (t > 0.3) return `rgba(245, 158, 11, ${0.3 + t * 0.7})`; // yellow/orange
+          return `rgba(34, 197, 94, ${0.3 + t * 0.7})`; // green
+        });
+    }, [data]);
+    
+    // Generate spread arcs for population migration patterns
+    const spreadArcs = useMemo(() => {
+      if (!data?.data || mapMode !== 'spread') return [];
+      const countries = data.data;
+      const arcs: any[] = [];
+      // Create arcs from high population to growth areas
+      const highPopCountries = countries.filter((c: any) => c.populationMillions > 50).slice(0, 5);
+      const otherCountries = countries.filter((c: any) => c.populationMillions < 50).slice(0, 10);
+      
+      highPopCountries.forEach((source: any) => {
+        otherCountries.forEach((target: any, i: number) => {
+          if (i % 2 === 0) {
+            arcs.push({
+              startLat: source.lat,
+              startLng: source.lon,
+              endLat: target.lat,
+              endLng: target.lon,
+              color: `rgba(6, 182, 212, ${0.3 + Math.random() * 0.4})`,
+            });
+          }
+        });
+      });
+      return arcs;
+    }, [data, mapMode]);
     
     return (
       <GlobeErrorBoundary fallback={fallback}>
@@ -167,17 +214,26 @@ export default function Home() {
           backgroundImageUrl="https://unpkg.com/three-globe/example/img/night-sky.png"
           onGlobeReady={() => setGlobeReady(true)}
 
-          /* Country bars - hidden in night mode */
-          pointsData={config.showBars ? data?.data || [] : []}
+          /* Country bars/population indicators */
+          pointsData={config.showBars || config.showHeatmap ? data?.data || [] : []}
           pointLat="lat"
           pointLng="lon"
-          pointAltitude={(d: any) => Math.max(0.02, Math.min(d.populationMillions / 300, 0.6))}
-          pointColor={(d: any) => colorScale(d.populationMillions)}
-          pointRadius={0.4}
+          pointAltitude={(d: any) => config.showHeatmap 
+            ? 0.01 
+            : Math.max(0.02, Math.min(d.populationMillions / 300, 0.6))
+          }
+          pointColor={(d: any) => config.showHeatmap 
+            ? heatmapColorScale(d.populationMillions)
+            : colorScale(d.populationMillions)
+          }
+          pointRadius={(d: any) => config.showHeatmap 
+            ? Math.max(0.8, Math.min(d.populationMillions / 50, 2.5))
+            : 0.4
+          }
           pointsMerge={false}
           pointLabel={countryTooltip}
 
-          /* City dots - always visible */
+          /* City dots - visible in all modes */
           labelsData={cities}
           labelLat="lat"
           labelLng="lon"
@@ -189,6 +245,14 @@ export default function Home() {
           labelColor={() => 'rgba(245,158,11,0.9)'}
           labelLabel={cityTooltip}
           labelResolution={6}
+          
+          /* Spread mode - arcs showing population flow */
+          arcsData={config.showSpread ? spreadArcs : []}
+          arcColor="color"
+          arcDashLength={0.4}
+          arcDashGap={0.2}
+          arcDashAnimateTime={2000}
+          arcStroke={0.5}
         />
       </GlobeErrorBoundary>
     );
@@ -224,28 +288,26 @@ export default function Home() {
         <div className="hidden lg:flex absolute top-4 right-4 z-10 flex-col gap-2">
           {[
             { id: 'globe', icon: Globe2, label: '3D Globe', color: 'primary' },
-            { id: 'heatmap', icon: Map, label: 'Heatmap', color: 'rose', disabled: true },
+            { id: 'heatmap', icon: Map, label: 'Heatmap', color: 'rose' },
             { id: 'night', icon: Moon, label: 'Night Lights', color: 'amber' },
-            { id: 'spread', icon: Radio, label: 'Spread Map', color: 'emerald', disabled: true },
+            { id: 'spread', icon: Radio, label: 'Spread Map', color: 'emerald' },
           ].map((mode) => {
             const isActive = mapMode === mode.id;
             const Icon = mode.icon;
             return (
               <button
                 key={mode.id}
-                onClick={() => !mode.disabled && setMapMode(mode.id as MapMode)}
-                disabled={mode.disabled}
-                className={`glass-panel p-3 rounded-xl flex items-center gap-3 transition-all min-w-[140px] ${
+                onClick={() => setMapMode(mode.id as MapMode)}
+                className={`glass-panel p-3 rounded-xl flex items-center gap-3 transition-all min-w-[140px] cursor-pointer ${
                   isActive ? 'border-primary/50 bg-primary/10' : 'hover:bg-white/5'
-                } ${mode.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                title={mode.disabled ? `${mode.label} - Coming Soon` : mode.label}
+                }`}
+                title={mode.label}
               >
-                <div className={`p-2 rounded-lg ${isActive ? `bg-${mode.color}/20 text-${mode.color}` : 'bg-white/10 text-muted-foreground'}`}>
+                <div className={`p-2 rounded-lg ${isActive ? 'bg-primary/20 text-primary' : 'bg-white/10 text-muted-foreground'}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
                   {mode.label}
-                  {mode.disabled && <span className="block text-[10px] opacity-60">Soon</span>}
                 </span>
               </button>
             );
