@@ -16,6 +16,8 @@ import {
   Building2, Users, MapPin, TrendingUp, TrendingDown, Minus,
   ArrowLeft, Calendar, Globe2, BarChart2, Sparkles,
 } from 'lucide-react';
+import { ShareButton } from '@/components/share/ShareButton';
+import { buildCityUrl } from '@/lib/share';
 
 export default function City() {
   const { slug } = useParams<{ slug: string }>();
@@ -130,7 +132,16 @@ export default function City() {
                 )}
               </div>
               
-              <h1 className="text-3xl md:text-4xl font-bold mb-3">{city.name}</h1>
+              <div className="flex items-center gap-3 mb-3 flex-wrap">
+                <h1 className="text-3xl md:text-4xl font-bold">{city.name}</h1>
+                <ShareButton
+                  title={`${city.name} population — Populle`}
+                  text={`${city.name}, ${city.country}: ${formatPopulation(city.populationMillions)}. Explore on Populle.`}
+                  url={buildCityUrl(city.name)}
+                  variant="ghost"
+                  size="sm"
+                />
+              </div>
               
               <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                 <span className="flex items-center gap-1.5">

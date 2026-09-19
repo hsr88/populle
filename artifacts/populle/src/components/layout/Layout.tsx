@@ -1,13 +1,16 @@
 import { ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { YearSlider } from './YearSlider';
+import { cn } from '@/lib/utils';
 
 interface LayoutProps {
   children: ReactNode;
   hideYearSlider?: boolean;
+  /** Edge-to-edge content (no container padding) — for landing / story */
+  fullBleed?: boolean;
 }
 
-export function Layout({ children, hideYearSlider = false }: LayoutProps) {
+export function Layout({ children, hideYearSlider = false, fullBleed = false }: LayoutProps) {
   return (
     <div
       className="min-h-screen w-full bg-background text-foreground overflow-hidden relative"
@@ -23,9 +26,18 @@ export function Layout({ children, hideYearSlider = false }: LayoutProps) {
 
       <Sidebar />
 
-      {/* Desktop: left sidebar (w-64), Mobile: top bar (h-14) */}
-      <main className={`lg:pl-64 pt-14 lg:pt-0 h-screen overflow-y-auto relative z-10 ${hideYearSlider ? 'pb-8' : 'pb-44 lg:pb-36'}`}>
-        <div className="container mx-auto p-3 sm:p-5 lg:p-8 h-full">
+      <main
+        className={cn(
+          'lg:pl-64 pt-14 lg:pt-0 h-screen overflow-y-auto relative z-10',
+          hideYearSlider ? 'pb-0' : 'pb-44 lg:pb-36',
+        )}
+      >
+        <div
+          className={cn(
+            'h-full',
+            fullBleed ? 'w-full' : 'container mx-auto p-3 sm:p-5 lg:p-8',
+          )}
+        >
           {children}
         </div>
       </main>

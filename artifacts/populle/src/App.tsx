@@ -6,6 +6,7 @@ import { PopulationProvider } from "@/context/PopulationContext";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/Home";
+import Globe from "@/pages/Globe";
 import MapPage from "@/pages/Map";
 import Cities from "@/pages/Cities";
 import Compare from "@/pages/Compare";
@@ -16,6 +17,8 @@ import FAQ from "@/pages/FAQ";
 import Privacy from "@/pages/Privacy";
 import Country from "@/pages/Country";
 import City from "@/pages/City";
+import Story from "@/pages/Story";
+import Contrast from "@/pages/Contrast";
 import AgePyramid from "@/pages/demographics/AgePyramid";
 import Gender from "@/pages/demographics/Gender";
 import LanguagesPage from "@/pages/demographics/Languages";
@@ -37,6 +40,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/story/:year" component={Story} />
+      <Route path="/story" component={Story} />
+      <Route path="/contrast" component={Contrast} />
+      <Route path="/globe" component={Globe} />
       <Route path="/map" component={MapPage} />
       <Route path="/cities" component={Cities} />
       <Route path="/compare" component={Compare} />

@@ -16,6 +16,8 @@ import {
   Globe2, Users, MapPin, TrendingUp, TrendingDown, Minus,
   Building, ArrowLeft, Calendar, Ruler, BarChart2,
 } from 'lucide-react';
+import { ShareButton } from '@/components/share/ShareButton';
+import { buildCountryUrl } from '@/lib/share';
 
 const COUNTRY_EXTRAS: Record<string, { capital: string; area: number }> = {
   CHN: { capital: 'Beijing', area: 9_596_960 },
@@ -159,13 +161,20 @@ export default function Country() {
                 onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
               />
               <div>
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <h1 className="text-3xl md:text-4xl font-bold">{country.name}</h1>
                   {rank && (
                     <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold">
                       #{rank} in world
                     </span>
                   )}
+                  <ShareButton
+                    title={`${country.name} population — Populle`}
+                    text={`${country.name}: ${formatPopulation(country.populationMillions)} people in ${year}. Explore on Populle.`}
+                    url={buildCountryUrl(country.iso3)}
+                    variant="ghost"
+                    size="sm"
+                  />
                 </div>
                 <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
                   <span className="flex items-center gap-1.5">

@@ -8,44 +8,11 @@ import {
   formatYear, formatYearFull, getEraLabel,
   isAncient,
 } from '@/lib/timeUtils';
+import { HISTORICAL_EVENTS } from '@/data/historicalEvents';
 
 // Key years to show as tick marks — keep sparse in ancient (compressed) zone
 const ALL_TICKS    = [-10000, -5000, -1000, 1800, 1900, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2026, 2030, 2040, 2050, 2100];
 const MOBILE_TICKS = [-10000, -5000, -1000, 1800, 1950, 2000, 2026, 2050, 2100];
-
-const HISTORICAL_EVENTS = [
-  // Ancient plagues & catastrophes
-  { year: -5500,  icon: '🌾', label: 'Neolithic Revolution',      color: '#22c55e',  impact: 'Agriculture spreads — first sustained population growth in history' },
-  { year: -3500,  icon: '🏙️', label: 'First Cities',              color: '#06b6d4',  impact: 'Mesopotamia & Egypt urbanize; writing and organized society emerge' },
-  { year: -430,   icon: '☠️', label: 'Plague of Athens',          color: '#ef4444',  impact: '~75–100K deaths; killed ~25% of Athenian forces and population' },
-  { year: 165,    icon: '☠️', label: 'Antonine Plague',           color: '#ef4444',  impact: '5–10M deaths across the Roman Empire' },
-  { year: 541,    icon: '☠️', label: 'Plague of Justinian',       color: '#ef4444',  impact: '25–50M deaths — first recorded pandemic, shrank Europe\'s population' },
-  { year: 1200,   icon: '⚔️', label: 'Mongol Conquests',          color: '#f97316',  impact: '30–40M deaths; conquered lands lost up to 80% of their population' },
-  { year: 1347,   icon: '☠️', label: 'Black Death',               color: '#ef4444',  impact: '75–200M deaths — killed 30–60% of Europe\'s entire population' },
-  // Early Modern
-  { year: 1492,   icon: '⚓', label: 'Columbian Exchange',        color: '#f59e0b',  impact: 'European diseases wiped out ~90% of indigenous American peoples' },
-  { year: 1618,   icon: '⚔️', label: 'Thirty Years\' War',        color: '#f97316',  impact: '~8M deaths; Central Europe lost up to a third of its population' },
-  { year: 1720,   icon: '☠️', label: 'Great Plague of Marseille', color: '#ef4444',  impact: 'Last major plague outbreak in Western Europe; ~100K dead' },
-  // Industrial & Modern era
-  { year: 1800,   icon: '🌍', label: '1 Billion People',          color: '#8b5cf6',  impact: 'World population crosses 1 billion for the first time' },
-  { year: 1845,   icon: '🥔', label: 'Irish Potato Famine',       color: '#f97316',  impact: '1M dead, 2M emigrated — Ireland lost 25% of its population' },
-  { year: 1850,   icon: '🏭', label: 'Industrial Revolution',     color: '#06b6d4',  impact: 'Steam power & medicine accelerate population growth dramatically' },
-  { year: 1914,   icon: '⚔️', label: 'World War I',              color: '#f97316',  impact: '20M deaths; reshapes borders and triggers the Spanish Flu' },
-  { year: 1918,   icon: '😷', label: 'Spanish Flu',               color: '#ef4444',  impact: '50–100M deaths worldwide — one of history\'s deadliest pandemics' },
-  { year: 1928,   icon: '💊', label: 'Penicillin Discovered',     color: '#22c55e',  impact: 'Antibiotics begin saving hundreds of millions of lives globally' },
-  { year: 1939,   icon: '⚔️', label: 'World War II',             color: '#f97316',  impact: '70–85M deaths; deadliest conflict in history' },
-  { year: 1945,   icon: '🕊️', label: 'Post-WWII Baby Boom',      color: '#22c55e',  impact: 'Birth rates surge worldwide; population grows at record pace' },
-  { year: 1959,   icon: '🌾', label: 'Great Chinese Famine',      color: '#ef4444',  impact: '15–55M deaths from famine during the Great Leap Forward' },
-  { year: 1960,   icon: '🌱', label: 'Green Revolution',          color: '#22c55e',  impact: 'High-yield crops and fertilizers feed billions; famines decline sharply' },
-  { year: 1967,   icon: '💉', label: 'Smallpox Eradication Drive',color: '#22c55e',  impact: 'Global vaccination campaign begins; smallpox eradicated by 1980' },
-  { year: 1974,   icon: '🌍', label: '4 Billion People',          color: '#8b5cf6',  impact: 'World population reaches 4 billion — doubling in just 47 years' },
-  { year: 1987,   icon: '🌍', label: '5 Billion People',          color: '#8b5cf6',  impact: 'World population reaches 5 billion' },
-  { year: 1999,   icon: '🌍', label: '6 Billion People',          color: '#8b5cf6',  impact: 'World population reaches 6 billion' },
-  { year: 2011,   icon: '🌍', label: '7 Billion People',          color: '#8b5cf6',  impact: 'World population reaches 7 billion' },
-  { year: 2020,   icon: '🦠', label: 'COVID-19 Pandemic',         color: '#ef4444',  impact: '7M+ official deaths; first pandemic to halt global air travel' },
-  { year: 2022,   icon: '🌍', label: '8 Billion People',          color: '#8b5cf6',  impact: 'World population reaches 8 billion — slowest growth rate since 1950' },
-  { year: 2080,   icon: '📉', label: 'Peak Population (proj.)',   color: '#06b6d4',  impact: 'UN median: global population peaks ~10.3B then slowly declines' },
-];
 
 const SLIDER_BREAK_PCT = 30; // % of bar width given to ancient period (0 to 1800)
 
