@@ -1,7 +1,7 @@
 FROM node:20-slim
 
-# Install pnpm globally
-RUN npm install -g pnpm@latest
+# Install pnpm 9 (v10 has build script restrictions)
+RUN npm install -g pnpm@9
 
 # Set working directory
 WORKDIR /app
