@@ -1,13 +1,13 @@
 FROM node:20-slim
 
-# Install pnpm
-RUN npm install -g pnpm
+# Install pnpm globally
+RUN npm install -g pnpm@latest
 
 # Set working directory
 WORKDIR /app
 
 # Copy workspace files
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
 COPY tsconfig.base.json ./
 
 # Copy all packages
