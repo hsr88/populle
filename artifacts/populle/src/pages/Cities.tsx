@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { Link } from 'wouter';
 import { Layout } from '@/components/layout/Layout';
 import { usePopulationState } from '@/context/PopulationContext';
 import { useGetCityPopulation, useGetPopulationTimeseries } from '@workspace/api-client-react';
@@ -7,11 +8,12 @@ import { formatPopulation } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AncientEraPanel } from '@/components/ui/AncientEraPanel';
 import { isAncient } from '@/lib/timeUtils';
+import { SEO } from '@/components/SEO';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip,
   ResponsiveContainer, ReferenceLine,
 } from 'recharts';
-import { Search, X, TrendingUp, TrendingDown, Minus, MapPin } from 'lucide-react';
+import { Search, X, TrendingUp, TrendingDown, Minus, MapPin, ExternalLink } from 'lucide-react';
 
 interface SearchResult { name: string; continent: string; }
 
@@ -33,7 +35,8 @@ export default function Cities() {
     if (!query.trim()) { setResults([]); setDropdownOpen(false); return; }
     const t = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/population/search?q=${encodeURIComponent(query)}&type=city`);
+        const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+        const res = await fetch(`${base}/api/population/search?q=${encodeURIComponent(query)}&type=city`);
         const json = await res.json();
         setResults(json.results || []);
         setDropdownOpen(true);
@@ -94,8 +97,16 @@ export default function Cities() {
     pop: p.populationMillions,
   })) ?? [];
 
+  const topCity = data?.data?.[0];
+  
   return (
     <Layout>
+      <SEO
+        title={`Top ${limit} Largest Cities in ${year} | World's Biggest Cities | Populle`}
+        description={`Discover the world's largest cities in ${year}. ${topCity ? `${topCity.name} leads with ${formatPopulation(topCity.populationMillions)} people.` : ''} Compare urban populations, see growth projections to 2050, and explore megacity trends.`}
+        keywords="largest cities, biggest cities, megacities, urban population, city rankings, city population, metropolitan areas, urbanization"
+        path="/cities"
+      />
       <div className="max-w-5xl mx-auto flex flex-col gap-5 pb-32">
         {/* Header + Search */}
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
@@ -229,6 +240,13 @@ export default function Cities() {
               {!tsLoading && chartData.length === 0 && (
                 <div className="h-32 flex items-center justify-center text-muted-foreground text-sm">No timeseries data available</div>
               )}
+              
+              <Link 
+                href={`/city/${selectedCity.toLowerCase().replace(/\s+/g, '-')}`}
+                className="mt-4 inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm font-medium transition-colors"
+              >
+                View full city profile <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
             </motion.div>
           )}
         </AnimatePresence>

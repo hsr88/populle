@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/components/SEO";
-import { Globe, Info } from "lucide-react";
+import { Globe, Info, Languages } from "lucide-react";
 
 export default function LanguagesPage() {
   return (

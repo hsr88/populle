@@ -14,6 +14,8 @@ import Quiz from "@/pages/Quiz";
 import About from "@/pages/About";
 import FAQ from "@/pages/FAQ";
 import Privacy from "@/pages/Privacy";
+import Country from "@/pages/Country";
+import City from "@/pages/City";
 import AgePyramid from "@/pages/demographics/AgePyramid";
 import Gender from "@/pages/demographics/Gender";
 import LanguagesPage from "@/pages/demographics/Languages";
@@ -43,6 +45,10 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/faq" component={FAQ} />
       <Route path="/privacy" component={Privacy} />
+      
+      {/* Dynamic Pages */}
+      <Route path="/country/:iso3" component={Country} />
+      <Route path="/city/:slug" component={City} />
       
       {/* Demographics */}
       <Route path="/demographics/age-pyramid" component={AgePyramid} />

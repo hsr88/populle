@@ -1,21 +1,24 @@
 import { Layout } from '@/components/layout/Layout';
 import { usePopulationState } from '@/context/PopulationContext';
-import { useGetPopulationSummary, useGetCountryPopulation } from '@workspace/api-client-react';
+import { useGetPopulationSummary, useGetCountryPopulation, useGetPopulationTimeseries } from '@workspace/api-client-react';
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation, formatLargeNumber } from '@/lib/utils';
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   Tooltip as RechartsTooltip, Legend,
+  AreaChart, Area, XAxis, YAxis, ReferenceLine,
+  BarChart, Bar,
 } from 'recharts';
 import {
   Globe2, Users, Building, MapPin, AlertTriangle,
   TrendingUp, TrendingDown, Minus, Clock, Trees,
-  Lightbulb, RefreshCw,
+  Lightbulb, RefreshCw, Activity, Sparkles,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { getRandomFact } from '@/data/funFacts';
 import { formatYearFull, isAncient } from '@/lib/timeUtils';
 import { getFlagUrl } from '@/lib/countryUtils';
+import { SEO } from '@/components/SEO';
 
 const PIE_COLORS = ['#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
 
@@ -42,6 +45,13 @@ export default function Stats() {
   const { data, isLoading, isError, refetch } = useGetPopulationSummary({ year });
   const { data: prevData } = useGetPopulationSummary({ year: prevYear });
   const { data: countriesData } = useGetCountryPopulation({ year });
+  
+  // World population trend data
+  const { data: worldTrend } = useGetPopulationTimeseries({
+    locations: 'China,India,United States,Indonesia,Pakistan',
+    type: 'country',
+    variant: 'medium',
+  });
 
   if (isLoading) return <Layout><LoadingScreen message="Aggregating World Stats..." /></Layout>;
   if (isError) return <Layout><ErrorState error={null} retry={() => refetch()} /></Layout>;
@@ -81,8 +91,55 @@ export default function Stats() {
     value: c.populationMillions,
   })) || [];
 
+  // Transform trend data for area chart
+  const trendChartData = useMemo(() => {
+    if (!worldTrend?.locations?.length) return [];
+    const yearMap = new Map<number, Record<string, number>>();
+    
+    worldTrend.locations.forEach((loc: { name: string; data: Array<{ year: number; populationMillions: number }> }) => {
+      loc.data.forEach((pt) => {
+        const entry = yearMap.get(pt.year) || { year: pt.year };
+        entry[loc.name] = pt.populationMillions;
+        yearMap.set(pt.year, entry);
+      });
+    });
+    
+    return Array.from(yearMap.values()).sort((a, b) => a.year - b.year);
+  }, [worldTrend]);
+
+  // Top 10 countries by different metrics
+  const top10ByDensity = useMemo(() => 
+    (countriesData?.data ?? [])
+      .slice()
+      .filter((c: any) => c.density && c.density > 0)
+      .sort((a: any, b: any) => (b.density || 0) - (a.density || 0))
+      .slice(0, 10),
+  [countriesData]);
+
+  const top10ByGrowth = useMemo(() =>
+    (countriesData?.data ?? [])
+      .slice()
+      .filter((c: any) => c.growthRate != null)
+      .sort((a: any, b: any) => (b.growthRate || 0) - (a.growthRate || 0))
+      .slice(0, 10),
+  [countriesData]);
+
+  const densityBarData = top10ByDensity.map((c: any) => ({
+    name: c.name.length > 12 ? c.name.slice(0, 10) + '…' : c.name,
+    density: Math.round(c.density || 0),
+    iso3: c.iso3,
+  }));
+
+  const CHART_COLORS = ['#06b6d4', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'];
+
   return (
     <Layout>
+      <SEO
+        title={`World Population Statistics ${year} | Global Demographics Dashboard | Populle`}
+        description={`Global population statistics for ${formatYearFull(year)}: ${formatPopulation(worldM)} people worldwide. ${urbanPct.toFixed(0)}% urban. Explore continent breakdown, top countries, and demographic trends.`}
+        keywords="world population statistics, global demographics, population dashboard, continent population, urbanization, demographic data, population facts"
+        path="/stats"
+      />
       <div className="max-w-6xl mx-auto flex flex-col gap-6 pb-6">
         <div>
           <h1 className="text-3xl font-bold">Global Dashboard</h1>
@@ -274,7 +331,84 @@ export default function Stats() {
           </div>
         </div>
 
-        {/* ── Row 3: Charts + Top 5 ── */}
+        {/* ── Row 3: Population Trend Chart ── */}
+        {trendChartData.length > 0 && (
+          <div className="glass-panel p-6 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-bold">Top 5 Countries Over Time</h3>
+                <p className="text-xs text-muted-foreground mt-1">Population trends from 1800 to 2100</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-primary" />
+                <span className="text-xs text-muted-foreground">Historical + Projections</span>
+              </div>
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trendChartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    {worldTrend?.locations?.map((loc: any, i: number) => (
+                      <linearGradient key={loc.name} id={`gradient-${i}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0} />
+                      </linearGradient>
+                    ))}
+                  </defs>
+                  <XAxis 
+                    dataKey="year" 
+                    tick={{ fontSize: 10, fill: '#6b7280' }} 
+                    tickLine={false} 
+                    axisLine={false}
+                    tickFormatter={(v) => v > 0 ? v : `${Math.abs(v)} BCE`}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 10, fill: '#6b7280' }} 
+                    tickLine={false} 
+                    axisLine={false}
+                    tickFormatter={(v) => `${v.toFixed(0)}M`}
+                  />
+                  <RechartsTooltip
+                    formatter={(value: number, name: string) => [`${value.toFixed(0)}M`, name]}
+                    contentStyle={{ 
+                      backgroundColor: 'rgba(3,7,18,0.95)', 
+                      borderColor: 'rgba(255,255,255,0.1)', 
+                      borderRadius: '12px', 
+                      color: '#fff',
+                      fontSize: 12 
+                    }}
+                    labelFormatter={(label) => `Year ${label}`}
+                  />
+                  <ReferenceLine 
+                    x={year} 
+                    stroke="rgba(6,182,212,0.5)" 
+                    strokeDasharray="4 2"
+                    label={{ value: String(year), position: 'top', fontSize: 9, fill: '#06b6d4' }}
+                  />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={36}
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: 11 }}
+                  />
+                  {worldTrend?.locations?.map((loc: any, i: number) => (
+                    <Area
+                      key={loc.name}
+                      type="monotone"
+                      dataKey={loc.name}
+                      stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                      strokeWidth={2}
+                      fill={`url(#gradient-${i})`}
+                      dot={false}
+                    />
+                  ))}
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* ── Row 4: Charts + Top 5 ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Pie Chart */}
@@ -381,8 +515,135 @@ export default function Stats() {
             )}
           </div>
         </div>
+
+        {/* ── Row 5: Density + Growth Rankings ── */}
+        {!ancient && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Density Bar Chart */}
+            <div className="glass-panel p-6 rounded-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold">Population Density</h3>
+                  <p className="text-xs text-muted-foreground mt-1">People per km² (Top 10)</p>
+                </div>
+                <div className="px-2 py-1 rounded-lg bg-accent/10 text-accent text-xs font-medium">
+                  per km²
+                </div>
+              </div>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={densityBarData} layout="vertical" margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
+                    <XAxis type="number" tick={{ fontSize: 10, fill: '#6b7280' }} tickLine={false} axisLine={false} />
+                    <YAxis 
+                      type="category" 
+                      dataKey="name" 
+                      tick={{ fontSize: 10, fill: '#9ca3af' }} 
+                      tickLine={false} 
+                      axisLine={false}
+                      width={80}
+                    />
+                    <RechartsTooltip
+                      formatter={(value: number) => [`${value.toLocaleString()} /km²`, 'Density']}
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(3,7,18,0.95)', 
+                        borderColor: 'rgba(255,255,255,0.1)', 
+                        borderRadius: '10px', 
+                        color: '#fff',
+                        fontSize: 12 
+                      }}
+                    />
+                    <Bar dataKey="density" fill="#f59e0b" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Fastest Growing Countries */}
+            <div className="glass-panel p-6 rounded-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold">Fastest Growing</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Annual growth rate (Top 10)</p>
+                </div>
+                <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium">
+                  <Sparkles className="w-3 h-3" />
+                  Growth
+                </div>
+              </div>
+              <div className="space-y-2.5 max-h-56 overflow-y-auto">
+                {top10ByGrowth.map((country: any, i: number) => (
+                  <div key={country.iso3} className="flex items-center gap-3 p-2 rounded-lg bg-white/5 hover:bg-white/8 transition-colors">
+                    <span className="text-xs font-bold w-5 text-center text-emerald-400">{i + 1}</span>
+                    <img
+                      src={getFlagUrl(country.iso3)}
+                      alt={country.name}
+                      className="w-6 h-4 object-cover rounded-sm shrink-0 border border-white/10"
+                      onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                    />
+                    <span className="flex-1 text-sm font-medium text-white truncate">{country.name}</span>
+                    <div className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3 text-emerald-400" />
+                      <span className="text-sm font-bold text-emerald-400">
+                        +{(country.growthRate || 0).toFixed(2)}%
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Quick Facts Grid ── */}
+        <div className="glass-panel p-6 rounded-2xl">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-accent" />
+            <h3 className="text-lg font-bold">Quick Facts for {formatYearFull(year)}</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <QuickFactCard
+              label="Total Countries"
+              value={String(countriesData?.totalCountries || 0)}
+              color="text-primary"
+            />
+            <QuickFactCard
+              label="Avg. Country Pop."
+              value={countriesData?.data?.length 
+                ? formatPopulation(worldM / countriesData.data.length) 
+                : '-'}
+              color="text-accent"
+            />
+            <QuickFactCard
+              label="Median Density"
+              value={(() => {
+                const densities = (countriesData?.data ?? [])
+                  .map((c: any) => c.density)
+                  .filter((d: number) => d > 0)
+                  .sort((a: number, b: number) => a - b);
+                if (!densities.length) return '-';
+                const mid = Math.floor(densities.length / 2);
+                return `${Math.round(densities[mid])}/km²`;
+              })()}
+              color="text-amber-400"
+            />
+            <QuickFactCard
+              label="Pop. Milestone"
+              value={`${currentBillions}B reached`}
+              color="text-purple-400"
+            />
+          </div>
+        </div>
       </div>
     </Layout>
+  );
+}
+
+function QuickFactCard({ label, value, color }: { label: string; value: string; color: string }) {
+  return (
+    <div className="text-center p-3 rounded-xl bg-white/5 border border-white/5">
+      <div className={`text-xl font-bold ${color}`}>{value}</div>
+      <div className="text-xs text-muted-foreground mt-1">{label}</div>
+    </div>
   );
 }
 

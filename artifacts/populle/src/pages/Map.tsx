@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'wouter';
 import { Layout } from '@/components/layout/Layout';
 import { usePopulationState } from '@/context/PopulationContext';
 import { useGetCountryPopulation } from '@workspace/api-client-react';
@@ -9,8 +10,9 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup, Sphere } from "re
 import { AncientEraPanel } from '@/components/ui/AncientEraPanel';
 import { isAncient, formatYearFull } from '@/lib/timeUtils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, Globe2, Users, BarChart2, TrendingUp, TrendingDown, Layers } from 'lucide-react';
+import { X, MapPin, Globe2, Users, BarChart2, TrendingUp, TrendingDown, Layers, ExternalLink } from 'lucide-react';
 import { getFlagUrl } from '@/lib/countryUtils';
+import { SEO, generateDatasetJsonLd } from '@/components/SEO';
 
 type MapMode = 'population' | 'density';
 
@@ -258,6 +260,16 @@ export default function MapPage() {
 
   return (
     <Layout>
+      <SEO
+        title={`World Population Map ${year} | Choropleth Visualization | Populle`}
+        description={`Interactive world map showing population distribution across ${data?.totalCountries || 170}+ countries in ${year}. Explore population density, compare regions, and see demographic patterns.`}
+        keywords="world map, population map, choropleth map, population density, country population, global demographics, interactive map"
+        path="/map"
+        jsonLd={generateDatasetJsonLd(
+          "World Population Choropleth Map",
+          "Interactive choropleth map visualization of world population data by country"
+        )}
+      />
       <div className="flex flex-col h-full gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -465,6 +477,14 @@ export default function MapPage() {
                       Detailed geography data not available for this country.
                     </div>
                   )}
+                  
+                  {/* View Full Profile Link */}
+                  <Link
+                    href={`/country/${selectedCountry.iso3.toLowerCase()}`}
+                    className="mt-auto flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary font-medium transition-all"
+                  >
+                    View Full Profile <ExternalLink className="w-4 h-4" />
+                  </Link>
                 </div>
               </motion.div>
             )}

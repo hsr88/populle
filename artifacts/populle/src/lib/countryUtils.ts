@@ -23,9 +23,56 @@ export const ISO3_TO_ISO2: Record<string, string> = {
   YEM: 'ye', ZAF: 'za', ZMB: 'zm', ZWE: 'zw', MMR: 'mm',
 };
 
-export function getFlagUrl(iso3: string): string | null {
+export function getFlagUrl(iso3: string): string | undefined {
   const iso2 = ISO3_TO_ISO2[iso3];
-  return iso2 ? `https://flagcdn.com/w80/${iso2}.png` : null;
+  return iso2 ? `https://flagcdn.com/w80/${iso2}.png` : undefined;
+}
+
+const COUNTRY_NAME_TO_ISO3: Record<string, string> = {
+  'Afghanistan': 'AFG', 'Angola': 'AGO', 'Albania': 'ALB', 'United Arab Emirates': 'ARE',
+  'Argentina': 'ARG', 'Armenia': 'ARM', 'Australia': 'AUS', 'Austria': 'AUT',
+  'Azerbaijan': 'AZE', 'Burundi': 'BDI', 'Belgium': 'BEL', 'Benin': 'BEN',
+  'Burkina Faso': 'BFA', 'Bangladesh': 'BGD', 'Bulgaria': 'BGR', 'Bahrain': 'BHR',
+  'Bosnia and Herzegovina': 'BIH', 'Belarus': 'BLR', 'Bolivia': 'BOL', 'Brazil': 'BRA',
+  'Bhutan': 'BTN', 'Botswana': 'BWA', 'Central African Republic': 'CAF', 'Canada': 'CAN',
+  'Switzerland': 'CHE', 'Chile': 'CHL', 'China': 'CHN', 'Ivory Coast': 'CIV',
+  'Cameroon': 'CMR', 'DR Congo': 'COD', 'Congo': 'COG', 'Colombia': 'COL',
+  'Comoros': 'COM', 'Cape Verde': 'CPV', 'Costa Rica': 'CRI', 'Cuba': 'CUB',
+  'Cyprus': 'CYP', 'Czechia': 'CZE', 'Czech Republic': 'CZE', 'Germany': 'DEU',
+  'Djibouti': 'DJI', 'Denmark': 'DNK', 'Dominican Republic': 'DOM', 'Algeria': 'DZA',
+  'Ecuador': 'ECU', 'Egypt': 'EGY', 'Eritrea': 'ERI', 'Spain': 'ESP', 'Estonia': 'EST',
+  'Ethiopia': 'ETH', 'Finland': 'FIN', 'Fiji': 'FJI', 'France': 'FRA', 'Gabon': 'GAB',
+  'United Kingdom': 'GBR', 'UK': 'GBR', 'Georgia': 'GEO', 'Ghana': 'GHA', 'Guinea': 'GIN',
+  'Gambia': 'GMB', 'Guinea-Bissau': 'GNB', 'Equatorial Guinea': 'GNQ', 'Greece': 'GRC',
+  'Guatemala': 'GTM', 'Guyana': 'GUY', 'Honduras': 'HND', 'Croatia': 'HRV', 'Haiti': 'HTI',
+  'Hungary': 'HUN', 'Indonesia': 'IDN', 'India': 'IND', 'Ireland': 'IRL', 'Iran': 'IRN',
+  'Iraq': 'IRQ', 'Iceland': 'ISL', 'Israel': 'ISR', 'Italy': 'ITA', 'Jamaica': 'JAM',
+  'Jordan': 'JOR', 'Japan': 'JPN', 'Kazakhstan': 'KAZ', 'Kenya': 'KEN', 'Kyrgyzstan': 'KGZ',
+  'Cambodia': 'KHM', 'South Korea': 'KOR', 'Korea': 'KOR', 'Kuwait': 'KWT', 'Laos': 'LAO',
+  'Lebanon': 'LBN', 'Liberia': 'LBR', 'Libya': 'LBY', 'Sri Lanka': 'LKA', 'Lesotho': 'LSO',
+  'Lithuania': 'LTU', 'Luxembourg': 'LUX', 'Latvia': 'LVA', 'Morocco': 'MAR', 'Moldova': 'MDA',
+  'Madagascar': 'MDG', 'Maldives': 'MDV', 'Mexico': 'MEX', 'North Macedonia': 'MKD',
+  'Mali': 'MLI', 'Malta': 'MLT', 'Montenegro': 'MNE', 'Mongolia': 'MNG', 'Mozambique': 'MOZ',
+  'Mauritania': 'MRT', 'Mauritius': 'MUS', 'Malawi': 'MWI', 'Malaysia': 'MYS', 'Namibia': 'NAM',
+  'Niger': 'NER', 'Nigeria': 'NGA', 'Nicaragua': 'NIC', 'Netherlands': 'NLD', 'Norway': 'NOR',
+  'Nepal': 'NPL', 'New Zealand': 'NZL', 'Oman': 'OMN', 'Pakistan': 'PAK', 'Panama': 'PAN',
+  'Peru': 'PER', 'Philippines': 'PHL', 'Papua New Guinea': 'PNG', 'Poland': 'POL',
+  'North Korea': 'PRK', 'Paraguay': 'PRY', 'Portugal': 'PRT', 'Qatar': 'QAT', 'Romania': 'ROU',
+  'Russia': 'RUS', 'Rwanda': 'RWA', 'Saudi Arabia': 'SAU', 'Sudan': 'SDN', 'Senegal': 'SEN',
+  'Singapore': 'SGP', 'Sierra Leone': 'SLE', 'Solomon Islands': 'SLB', 'El Salvador': 'SLV',
+  'Somalia': 'SOM', 'Serbia': 'SRB', 'South Sudan': 'SSD', 'Sao Tome and Principe': 'STP',
+  'Suriname': 'SUR', 'Slovakia': 'SVK', 'Slovenia': 'SVN', 'Sweden': 'SWE', 'Eswatini': 'SWZ',
+  'Seychelles': 'SYC', 'Syria': 'SYR', 'Chad': 'TCD', 'Togo': 'TGO', 'Thailand': 'THA',
+  'Tajikistan': 'TJK', 'Turkmenistan': 'TKM', 'Timor-Leste': 'TLS', 'Tonga': 'TON',
+  'Trinidad and Tobago': 'TTO', 'Tunisia': 'TUN', 'Turkey': 'TUR', 'Tanzania': 'TZA',
+  'Uganda': 'UGA', 'Ukraine': 'UKR', 'Uruguay': 'URY', 'United States': 'USA', 'USA': 'USA',
+  'United States of America': 'USA', 'Uzbekistan': 'UZB', 'Venezuela': 'VEN', 'Vietnam': 'VNM',
+  'Vanuatu': 'VUT', 'Samoa': 'WSM', 'Yemen': 'YEM', 'South Africa': 'ZAF', 'Zambia': 'ZMB',
+  'Zimbabwe': 'ZWE', 'Myanmar': 'MMR',
+};
+
+export function getIso3FromCountryName(countryName: string): string | undefined {
+  return COUNTRY_NAME_TO_ISO3[countryName] || undefined;
 }
 
 export function shuffle<T>(arr: T[]): T[] {

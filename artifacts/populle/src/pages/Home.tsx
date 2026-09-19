@@ -4,10 +4,11 @@ import { usePopulationState } from '@/context/PopulationContext';
 import { useGetCountryPopulation, useGetCityPopulation } from '@workspace/api-client-react';
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation } from '@/lib/utils';
-import { scaleSequential, interpolateRgb } from 'd3-scale';
+import { scaleSequential } from 'd3-scale';
 import { Globe2, Map, Sun, Moon, Radio } from 'lucide-react';
 import { AncientEraPanel } from '@/components/ui/AncientEraPanel';
 import { isAncient } from '@/lib/timeUtils';
+import { SEO, generateDatasetJsonLd } from '@/components/SEO';
 
 class GlobeErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
@@ -77,7 +78,7 @@ function cityTooltip(d: any) {
 
 export default function Home() {
   const { year, variant } = usePopulationState();
-  const globeRef = useRef<any>();
+  const globeRef = useRef<any>(null);
   const [globeReady, setGlobeReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [mapMode, setMapMode] = useState<MapMode>('globe');
@@ -148,14 +149,7 @@ export default function Home() {
       bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
       showBars: true,
       showHeatmap: false,
-      showSpread: false,
-    },
-    night: {
-      image: 'https://unpkg.com/three-globe/example/img/earth-night.jpg',
-      bump: 'https://unpkg.com/three-globe/example/img/earth-topology.png',
-      showBars: false,
-      showHeatmap: false,
-      showSpread: false,
+      showCities: true,
     },
     heatmap: {
       image: 'https://unpkg.com/three-globe/example/img/earth-dark.jpg',
@@ -247,6 +241,16 @@ export default function Home() {
 
   return (
     <Layout>
+      <SEO
+        title="World Population 3D Globe | Populle - Interactive Visualization"
+        description={`Explore world population on an interactive 3D globe. See population data for ${data?.totalCountries || 170}+ countries in year ${year}. Compare continents, discover trends from 10,000 BCE to 2100.`}
+        keywords="3D globe, world population, interactive map, population visualization, country population, global demographics, population data"
+        path="/"
+        jsonLd={generateDatasetJsonLd(
+          "World Population 3D Globe Dataset",
+          "Interactive 3D visualization of world population data covering 170+ countries from 10,000 BCE to 2100 CE"
+        )}
+      />
       <div className="w-full h-full flex flex-col relative">
         {/* Desktop info overlay */}
         <div className="hidden lg:block absolute top-4 left-4 z-10 glass-panel p-4 rounded-2xl max-w-xs pointer-events-none">
@@ -302,7 +306,7 @@ export default function Home() {
 
         {/* Mobile title */}
         <div className="lg:hidden mb-2 px-1">
-          <h1 className="text-xl font-bold">Global Population</h1>
+          <h2 className="text-xl font-bold">Global Population</h2>
           <p className="text-muted-foreground text-xs">Tap a marker for country or city details</p>
         </div>
 

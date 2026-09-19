@@ -21,7 +21,7 @@ export function LoadingScreen({ message = "Loading data..." }: { message?: strin
       <motion.p 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, yoyo: Infinity }}
+        transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
         className="text-primary font-display font-medium tracking-widest uppercase text-sm"
       >
         {message}

@@ -6,6 +6,7 @@ import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, ReferenceLine } from 'recharts';
 import { formatPopulation } from '@/lib/utils';
 import { Search, X } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 
 const COLORS = ['#06b6d4', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'];
 
@@ -40,7 +41,6 @@ export default function Compare() {
 
   const { data, isLoading, isError, refetch } = useGetPopulationTimeseries({
     locations: selectedLocations.join(','),
-    type: 'auto',
     variant
   });
 
@@ -75,6 +75,12 @@ export default function Compare() {
 
   return (
     <Layout>
+      <SEO
+        title={`Compare Country Population Growth 1800-2100 | ${selectedLocations.slice(0, 3).join(' vs ')} | Populle`}
+        description={`Compare population growth trends for ${selectedLocations.join(', ')}. Interactive charts showing historical data from 1800 and projections to 2100.`}
+        keywords="population comparison, country comparison, population growth, demographic trends, population chart, historical population, future projections"
+        path="/compare"
+      />
       <div className="flex flex-col h-full gap-6 max-w-7xl mx-auto">
         <div>
           <h1 className="text-3xl font-bold">Compare Growth</h1>
