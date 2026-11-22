@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@workspace/population": "workspace:*",
     "@workspace/db": "workspace:*",
     "@workspace/api-zod": "workspace:*",
     "drizzle-orm": "catalog:",

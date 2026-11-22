@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'wouter';
 import { Layout } from '@/components/layout/Layout';
 import { usePopulationState } from '@/context/PopulationContext';
+import { hasAnnualData, population } from '@workspace/population';
 import { useGetCountryPopulation } from '@workspace/api-client-react';
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation } from '@/lib/utils';
@@ -232,8 +233,8 @@ export default function MapPage() {
   }, [data]);
 
   const worldTotal = useMemo(() =>
-    (data?.data as any[])?.reduce((sum: number, c: any) => sum + c.population, 0) || 0,
-  [data]);
+    hasAnnualData(year) ? population("World", year, variant) / 1000 : data?.data.reduce((sum, c) => sum + c.population, 0) || 0,
+  [data, year, variant]);
 
   const selectedCountry = useMemo(() =>
     (data?.data as any[])?.find((c: any) => c.iso3 === selectedIso) || null,

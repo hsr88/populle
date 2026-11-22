@@ -15,6 +15,7 @@
     }
   },
   "references": [
+    { "path": "../../lib/population" },
     {
       "path": "../../lib/api-client-react"
     }

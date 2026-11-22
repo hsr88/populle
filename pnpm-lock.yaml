@@ -166,6 +166,9 @@ importers:
 
   artifacts/api-server:
     dependencies:
+      '@workspace/population':
+        specifier: workspace:*
+        version: link:../../lib/population
       '@workspace/api-zod':
         specifier: workspace:*
         version: link:../../lib/api-zod
@@ -389,6 +392,9 @@ importers:
 
   artifacts/populle:
     dependencies:
+      '@workspace/population':
+        specifier: workspace:*
+        version: link:../../lib/population
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
@@ -579,6 +585,9 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 4.2.1
+      tsx:
+        specifier: 'catalog:'
+        version: 4.21.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -637,6 +646,8 @@ importers:
       drizzle-kit:
         specifier: ^0.31.9
         version: 0.31.9
+
+  lib/population: {}
 
   scripts:
     devDependencies:

@@ -20,13 +20,13 @@ export function SEO({
   keywords = "world population, demographics, population visualization, UN data, population growth, demographic data, population statistics, country population, city population, demographic trends",
   ogImage = "/images/opengraph.png",
   ogType = "website",
-  path = "",
+  path,
   jsonLd,
 }: SEOProps) {
   useEffect(() => {
     document.title = title;
     
-    const canonicalUrl = `${SITE_URL}${path}`;
+    const canonicalUrl = `${SITE_URL}${path ?? window.location.pathname}`;
     
     const metaTags = [
       { name: 'description', content: description },

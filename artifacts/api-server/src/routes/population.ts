@@ -25,11 +25,15 @@ const COLORS = [
 router.get("/countries", (req, res) => {
   const year = parseInt(req.query.year as string) || 2025;
   const continent = (req.query.continent as string) || "";
-  const variant = (req.query.variant as string) || "medium";
+  const variant = req.query.variant ?? "medium";
+  if (variant !== "medium" && variant !== "high" && variant !== "low") {
+    res.status(400).json({ error: "Unknown population variant" });
+    return;
+  }
 
   let data = getCountryPopulation(
     Math.min(2100, Math.max(1800, year)),
-    variant as "medium" | "high" | "low"
+    variant
   );
 
   if (continent && continent !== "all") {
@@ -70,7 +74,11 @@ router.get("/cities", (req, res) => {
 router.get("/timeseries", (req, res) => {
   const locationsParam = (req.query.locations as string) || "";
   const type = (req.query.type as string) || "country";
-  const variant = (req.query.variant as string) || "medium";
+  const variant = req.query.variant ?? "medium";
+  if (variant !== "medium" && variant !== "high" && variant !== "low") {
+    res.status(400).json({ error: "Unknown population variant" });
+    return;
+  }
 
   const locationNames = locationsParam.split(",").map(l => l.trim()).filter(Boolean);
 
@@ -79,10 +87,10 @@ router.get("/timeseries", (req, res) => {
     if (type === "city") {
       series = getCityTimeseries(name);
     } else if (type === "auto" || type === "both") {
-      series = getCountryTimeseries(name, variant as "medium" | "high" | "low");
+      series = getCountryTimeseries(name, variant);
       if (!series) series = getCityTimeseries(name);
     } else {
-      series = getCountryTimeseries(name, variant as "medium" | "high" | "low");
+      series = getCountryTimeseries(name, variant);
     }
     if (!series) return null;
     return { ...series, color: COLORS[idx % COLORS.length] };

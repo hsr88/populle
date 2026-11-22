@@ -1,3 +1,5 @@
+import { FIRST_YEAR, LAST_YEAR, PROJECTION_START, hasAnnualData, isPilotCountry, population as wppPopulation, type PopulationVariant } from "@workspace/population";
+
 export interface CountryRecord {
   iso3: string;
   name: string;
@@ -772,12 +774,13 @@ export const CITIES: CityRecord[] = [
 export function getCountryPopulation(year: number, variant: "medium" | "high" | "low" = "medium") {
   const normalizedYear = normalizeYear(year);
   return COUNTRIES.map(c => {
-    const popData = c.populations[normalizedYear];
-    const population = popData ? popData[variant] : 0;
+    const annual = hasAnnualData(year) && isPilotCountry(c.iso3);
+    const population = countryPopulation(c, year, normalizedYear, variant);
     const density = c.area > 0 ? Math.round((population * 1000) / c.area) : 0;
-    const prevYear = normalizedYear > 1950 ? getPrevYear(normalizedYear) : normalizedYear;
-    const prevPop = c.populations[prevYear]?.[variant] || population;
-    const growthRate = prevPop > 0 && prevYear !== normalizedYear ? ((population - prevPop) / prevPop) * 100 : 0;
+    const prevYear = annual ? Math.max(FIRST_YEAR, year - 1) : getPrevYear(normalizedYear);
+    const prevPop = countryPopulation(c, prevYear, prevYear, variant);
+    const interval = (annual ? year : normalizedYear) - prevYear;
+    const growthRate = prevPop > 0 && interval > 0 ? ((population / prevPop) ** (1 / interval) - 1) * 100 : 0;
     return {
       iso3: c.iso3,
       name: c.name,
@@ -791,6 +794,11 @@ export function getCountryPopulation(year: number, variant: "medium" | "high" | 
       growthRate: Math.round(growthRate * 100) / 100,
     };
   });
+}
+
+function countryPopulation(country: CountryRecord, year: number, legacyYear: number, variant: PopulationVariant): number {
+  if (hasAnnualData(year) && isPilotCountry(country.iso3)) return wppPopulation(country.iso3, year, variant) / 1000;
+  return country.populations[legacyYear]?.[variant] ?? 0;
 }
 
 export function getCityPopulation(year: number) {
@@ -818,16 +826,16 @@ export function getCityPopulation(year: number) {
 export function getCountryTimeseries(name: string, variant: "medium" | "high" | "low" = "medium") {
   const country = COUNTRIES.find(c => c.name.toLowerCase() === name.toLowerCase() || c.iso3.toLowerCase() === name.toLowerCase());
   if (!country) return null;
+  const annual = isPilotCountry(country.iso3);
+  const years = annual ? [...YEARS.filter(year => year < FIRST_YEAR), ...Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i)] : YEARS;
   return {
     name: country.name,
     type: "country" as const,
     continent: country.continent,
-    data: YEARS.map(year => ({
-      year,
-      population: country.populations[year]?.[variant] || 0,
-      populationMillions: Math.round((country.populations[year]?.[variant] || 0) / 100) / 10,
-      isProjection: year > 2024,
-    })),
+    data: years.map(year => {
+      const population = countryPopulation(country, year, year, variant);
+      return { year, population, populationMillions: population / 1000, isProjection: annual ? year >= PROJECTION_START : year > 2024 };
+    }),
   };
 }
 
@@ -875,15 +883,16 @@ export function getWorldSummary(year: number) {
   }
 
   const normalizedYear = normalizeYear(year);
-  const countries = getCountryPopulation(normalizedYear);
-  const totalPop = countries.reduce((sum, c) => sum + c.population, 0);
+  const countries = getCountryPopulation(year);
+  const annual = hasAnnualData(year);
+  const totalPop = annual ? wppPopulation("World", year) / 1000 : countries.reduce((sum, c) => sum + c.population, 0);
   const cities = getCityPopulation(normalizedYear);
   const largestCountry = [...countries].sort((a, b) => b.population - a.population)[0];
   const largestCity = cities[0];
 
-  const continents = ["Asia", "Africa", "Europe", "North America", "South America", "Oceania"];
+  const continents = ["Asia", "Africa", "Europe", "North America", "South America", "Oceania"] as const;
   const continentBreakdown = continents.map(cont => {
-    const contPop = countries.filter(c => c.continent === cont).reduce((sum, c) => sum + c.population, 0);
+    const contPop = annual ? wppPopulation(cont, year) / 1000 : countries.filter(c => c.continent === cont).reduce((sum, c) => sum + c.population, 0);
     return {
       continent: cont,
       population: contPop,

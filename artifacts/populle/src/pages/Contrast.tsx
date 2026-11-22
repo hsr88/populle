@@ -14,7 +14,8 @@ import { SITE_URL } from '@/lib/share';
 import { cn, formatPopulation } from '@/lib/utils';
 import { Dices, ArrowLeftRight } from 'lucide-react';
 
-const CURRENT_YEAR = 2026;
+import { COMPARISON_PATH, EDITION_YEAR as CURRENT_YEAR, comparisonPath } from '@workspace/population';
+import { IndiaEuropeHistory, contrastTitle, comparisonAnswer } from '@/components/PopulationAnswers';
 
 type Mode = 'preset' | 'country' | 'city' | 'continent';
 
@@ -578,7 +579,7 @@ export default function Contrast() {
   ]);
 
   const goPreset = (id: string) => {
-    setLocation(`/contrast?pair=${id}`);
+    setLocation(id === 'india-europe' ? COMPARISON_PATH : `/contrast?pair=${id}`);
   };
 
   const goCustom = (m: 'country' | 'city' | 'continent', left: string, right: string) => {
@@ -597,10 +598,9 @@ export default function Contrast() {
     goPreset(pick.id);
   };
 
-  const shareUrl =
-    mode === 'preset'
-      ? `${SITE_URL}/contrast?pair=${pairId}`
-      : `${SITE_URL}/contrast?mode=${mode}&left=${encodeURIComponent(leftKey)}&right=${encodeURIComponent(rightKey)}`;
+  const canonical = comparisonPath(params);
+  const isIndiaEurope = canonical === COMPARISON_PATH;
+  const shareUrl = SITE_URL + canonical;
 
   const displayTitle = contrast?.title ?? PRESETS.find((p) => p.id === pairId)?.label ?? 'Contrast';
 
@@ -630,14 +630,14 @@ export default function Contrast() {
   return (
     <Layout hideYearSlider fullBleed>
       <SEO
-        title={`${displayTitle} | Population Contrast | Populle`}
+        title={isIndiaEurope ? contrastTitle : `${displayTitle} | Population Contrast | Populle`}
         description={
-          contrast
+          isIndiaEurope ? comparisonAnswer(CURRENT_YEAR) : contrast
             ? `${contrast.left.label} ${formatPopulation(contrast.left.valueMillions)} vs ${contrast.right.label} ${formatPopulation(contrast.right.valueMillions)}. ${contrast.insight}`
             : 'Dramatic population contrasts — countries, cities, continents, and eras.'
         }
         keywords="population contrast, country comparison, city comparison, world population"
-        path={`/contrast${search ? `?${search}` : ''}`}
+        path={canonical}
       />
 
       <div className="relative min-h-full w-full flex flex-col overflow-hidden">
@@ -651,7 +651,7 @@ export default function Contrast() {
                 Populle Contrast
               </p>
               <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-                {displayTitle}
+                {isIndiaEurope ? 'India vs Europe population' : displayTitle}
               </h1>
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -674,6 +674,7 @@ export default function Contrast() {
             </div>
           </div>
 
+          {isIndiaEurope && <IndiaEuropeHistory />}
           {/* Custom builders */}
           <div className="flex flex-col gap-3 p-3 sm:p-4 rounded-2xl border border-white/10 bg-black/30 backdrop-blur-sm">
             <div className="flex flex-wrap gap-2">
@@ -776,7 +777,7 @@ export default function Contrast() {
         </div>
 
         {/* Stage */}
-        <div className="relative z-10 flex-1 flex flex-col min-h-0">
+        {!isIndiaEurope && <div className="relative z-10 flex-1 flex flex-col min-h-0">
           {isLoading ? (
             <LoadingScreen message="Staging contrast..." />
           ) : isError ? (
@@ -825,7 +826,7 @@ export default function Contrast() {
               </motion.div>
             </AnimatePresence>
           )}
-        </div>
+        </div>}
       </div>
     </Layout>
   );

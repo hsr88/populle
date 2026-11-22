@@ -131,6 +131,7 @@ export default function Quiz() {
   return (
     <Layout>
       <SEO
+        path="/quiz"
         title="Population Quiz | Populle"
         description="Test your knowledge with 10 random questions about world population, countries, capitals, and demographics."
         keywords="population quiz, geography quiz, country quiz, demographics quiz, world quiz"
