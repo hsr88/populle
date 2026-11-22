@@ -72,7 +72,7 @@ export function ShareCard({
         {/* Brand */}
         <header className="mb-6 flex items-center gap-2.5">
           <img
-            src={`${import.meta.env.BASE_URL}images/logo.png`}
+            src={`${import.meta.env.BASE_URL}images/logo-120.png`}
             alt=""
             className="h-7 w-7 object-contain"
             aria-hidden

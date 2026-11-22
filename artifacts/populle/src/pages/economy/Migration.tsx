@@ -6,6 +6,7 @@ export default function Migration() {
   return (
     <Layout>
       <SEO
+        noindex
         title="Net Migration | Populle - Global Migration Flows"
         description="Explore international migration patterns. See where people are moving to and from, and understand global migration trends."
         keywords="migration, immigration, emigration, net migration, migration flows, people moving, migration trends"

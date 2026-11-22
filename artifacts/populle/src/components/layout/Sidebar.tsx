@@ -32,7 +32,7 @@ export function Sidebar() {
       <div className="hidden lg:flex w-64 h-screen fixed left-0 top-0 glass-panel border-r border-y-0 border-l-0 z-40 flex-col py-6">
         <Link href="/" className="flex items-center lg:px-6 mb-8 outline-none">
           <img
-            src={`${import.meta.env.BASE_URL}images/logo.png`}
+            src={`${import.meta.env.BASE_URL}images/logo-120.png`}
             alt="Populle Logo"
             className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]"
             style={{ mixBlendMode: 'screen' }}
@@ -131,7 +131,7 @@ export function Sidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 glass-panel border-b border-white/10 px-3 py-3 flex items-center justify-between gap-2">
         <Link href="/" className="flex items-center gap-2 outline-none shrink-0">
           <img
-            src={`${import.meta.env.BASE_URL}images/logo.png`}
+            src={`${import.meta.env.BASE_URL}images/logo-120.png`}
             alt="Populle Logo"
             className="w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(6,182,212,0.8)]"
             style={{ mixBlendMode: 'screen' }}

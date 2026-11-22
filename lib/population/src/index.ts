@@ -15,13 +15,12 @@ export function hasAnnualData(year: number): boolean {
 
 export function population(location: WppLocation, year: number, variant: PopulationVariant = "medium"): number {
   if (!hasAnnualData(year)) throw new RangeError(`WPP has no annual value for ${year}`);
-  const series = annualPopulation[location];
-  if (year < PROJECTION_START || variant === "medium") return series.medium[year - FIRST_YEAR];
-  return series[variant][year - PROJECTION_START];
+  return annualValue(annualPopulation[location], year, variant);
 }
 
-export function isPilotCountry(iso3: string): iso3 is "IND" | "VEN" {
-  return iso3 === "IND" || iso3 === "VEN";
+export function annualValue(series: Record<PopulationVariant, number[]>, year: number, variant: PopulationVariant): number {
+  if (year < PROJECTION_START || variant === "medium") return series.medium[year - FIRST_YEAR];
+  return series[variant][year - PROJECTION_START];
 }
 
 export const comparisonYears = Array.from({ length: EDITION_YEAR - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i);

@@ -6,6 +6,7 @@ export default function Gender() {
   return (
     <Layout>
       <SEO
+        noindex
         title="Gender Structure | Populle - Male to Female Ratio"
         description="Explore gender ratios across countries and time. Visualize male to female population distribution and demographic imbalances."
         keywords="gender ratio, male to female, sex ratio, demographics, population by gender, gender demographics"

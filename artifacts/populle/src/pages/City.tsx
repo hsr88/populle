@@ -100,7 +100,7 @@ export default function City() {
         title={`${city.name} Population ${year} | ${formatPopulation(city.populationMillions)} | Populle`}
         description={`${city.name}, ${city.country} population in ${year}: ${formatPopulation(city.populationMillions)}. ${isMegacity ? 'One of the world\'s megacities. ' : ''}Explore historical data, growth trends, and future projections.`}
         keywords={`${city.name} population, ${city.name} demographics, ${city.country} cities, ${city.continent} cities, ${isMegacity ? 'megacity, ' : ''}urban population`}
-        path={`/city/${city.name.toLowerCase().replace(/\s+/g, '-')}`}
+        path={`/city/${city.id}`}
         jsonLd={generateDatasetJsonLd(
           `${city.name} Population Data`,
           `Population statistics for ${city.name}, ${city.country} from 1950 to 2100`
@@ -137,7 +137,7 @@ export default function City() {
                 <ShareButton
                   title={`${city.name} population — Populle`}
                   text={`${city.name}, ${city.country}: ${formatPopulation(city.populationMillions)}. Explore on Populle.`}
-                  url={buildCityUrl(city.name)}
+                  url={buildCityUrl(city.id)}
                   variant="ghost"
                   size="sm"
                 />
@@ -323,7 +323,7 @@ export default function City() {
               {similarCities.map(c => (
                 <Link
                   key={c.id}
-                  href={`/city/${c.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  href={`/city/${c.id}`}
                   className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all"
                 >
                   <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">

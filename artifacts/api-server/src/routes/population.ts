@@ -116,7 +116,7 @@ router.get("/search", (req, res) => {
   const q = ((req.query.q as string) || "").toLowerCase();
   const type = (req.query.type as string) || "both";
 
-  const results: Array<{ name: string; type: string; continent: string }> = [];
+  const results: Array<{ name: string; type: string; continent: string; id?: string }> = [];
 
   if (type === "both" || type === "country") {
     COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.iso3.toLowerCase().includes(q))
@@ -127,7 +127,7 @@ router.get("/search", (req, res) => {
   if (type === "both" || type === "city") {
     CITIES.filter(c => c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q))
       .slice(0, 10)
-      .forEach(c => results.push({ name: c.name, type: "city", continent: c.continent }));
+      .forEach(c => results.push({ id: c.id, name: c.name, type: "city", continent: c.continent }));
   }
 
   res.json({ results });

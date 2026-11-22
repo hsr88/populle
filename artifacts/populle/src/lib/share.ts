@@ -20,8 +20,8 @@ export function buildCountryUrl(iso3: string): string {
   return `${SITE_URL}/country/${encodeURIComponent(iso3.toLowerCase())}`;
 }
 
-export function buildCityUrl(name: string): string {
-  return `${SITE_URL}/city/${encodeURIComponent(slugify(name))}`;
+export function buildCityUrl(id: string): string {
+  return `${SITE_URL}/city/${encodeURIComponent(id)}`;
 }
 
 export function buildStoryUrl(year: number): string {

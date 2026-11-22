@@ -6,6 +6,7 @@ export default function Density() {
   return (
     <Layout>
       <SEO
+        noindex
         title="Population Density | Populle - People per Square Kilometer"
         description="Explore population density across the globe. See where people concentrate and analyze land use efficiency across countries."
         keywords="population density, people per km2, land use, crowded countries, density map, population concentration"

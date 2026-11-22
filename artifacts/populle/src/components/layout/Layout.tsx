@@ -15,7 +15,7 @@ export function Layout({ children, hideYearSlider = false, fullBleed = false }: 
     <div
       className="min-h-screen w-full bg-background text-foreground overflow-hidden relative"
       style={{
-        backgroundImage: `url('${import.meta.env.BASE_URL}images/space-bg.png')`,
+        backgroundImage: `url('${import.meta.env.BASE_URL}images/space-bg.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',

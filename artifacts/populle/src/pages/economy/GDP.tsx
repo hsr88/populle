@@ -6,6 +6,7 @@ export default function GDP() {
   return (
     <Layout>
       <SEO
+        noindex
         title="GDP per Capita | Populle - Economy & Population"
         description="Explore the relationship between economic prosperity and population. Compare GDP per capita across countries and analyze economic-demographic correlations."
         keywords="GDP per capita, economy, economic data, prosperity, wealth distribution, economic demographics, country GDP"

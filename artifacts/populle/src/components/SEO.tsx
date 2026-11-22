@@ -11,6 +11,7 @@ interface SEOProps {
   ogImage?: string;
   ogType?: string;
   path?: string;
+  noindex?: boolean;
   jsonLd?: Record<string, unknown>;
 }
 
@@ -21,6 +22,7 @@ export function SEO({
   ogImage = "/images/opengraph.png",
   ogType = "website",
   path,
+  noindex = false,
   jsonLd,
 }: SEOProps) {
   useEffect(() => {
@@ -42,7 +44,7 @@ export function SEO({
       { name: 'twitter:description', content: description },
       { name: 'twitter:image', content: `${SITE_URL}${ogImage}` },
       { name: 'twitter:site', content: '@populle' },
-      { name: 'robots', content: 'index, follow' },
+      { name: 'robots', content: noindex ? 'noindex, follow' : 'index, follow' },
       { name: 'author', content: 'Populle' },
     ];
     
@@ -118,7 +120,7 @@ export function SEO({
     return () => {
       document.title = DEFAULT_TITLE;
     };
-  }, [title, description, keywords, ogImage, ogType, path, jsonLd]);
+  }, [title, description, keywords, ogImage, ogType, path, jsonLd, noindex]);
   
   return null;
 }

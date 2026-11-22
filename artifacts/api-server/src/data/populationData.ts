@@ -1,4 +1,5 @@
-import { FIRST_YEAR, LAST_YEAR, PROJECTION_START, hasAnnualData, isPilotCountry, population as wppPopulation, type PopulationVariant } from "@workspace/population";
+import { FIRST_YEAR, LAST_YEAR, PROJECTION_START, hasAnnualData, annualValue, population as wppPopulation, type PopulationVariant } from "@workspace/population";
+import { countrySeries } from "./annualCountries";
 
 export interface CountryRecord {
   iso3: string;
@@ -774,7 +775,7 @@ export const CITIES: CityRecord[] = [
 export function getCountryPopulation(year: number, variant: "medium" | "high" | "low" = "medium") {
   const normalizedYear = normalizeYear(year);
   return COUNTRIES.map(c => {
-    const annual = hasAnnualData(year) && isPilotCountry(c.iso3);
+    const annual = hasAnnualData(year);
     const population = countryPopulation(c, year, normalizedYear, variant);
     const density = c.area > 0 ? Math.round((population * 1000) / c.area) : 0;
     const prevYear = annual ? Math.max(FIRST_YEAR, year - 1) : getPrevYear(normalizedYear);
@@ -786,7 +787,7 @@ export function getCountryPopulation(year: number, variant: "medium" | "high" | 
       name: c.name,
       continent: c.continent,
       population,
-      populationMillions: Math.round(population / 100) / 10,
+      populationMillions: population / 1000,
       density,
       lat: c.lat,
       lon: c.lon,
@@ -797,7 +798,7 @@ export function getCountryPopulation(year: number, variant: "medium" | "high" | 
 }
 
 function countryPopulation(country: CountryRecord, year: number, legacyYear: number, variant: PopulationVariant): number {
-  if (hasAnnualData(year) && isPilotCountry(country.iso3)) return wppPopulation(country.iso3, year, variant) / 1000;
+  if (hasAnnualData(year)) return annualValue(countrySeries[country.iso3], year, variant) / 1000;
   return country.populations[legacyYear]?.[variant] ?? 0;
 }
 
@@ -826,15 +827,14 @@ export function getCityPopulation(year: number) {
 export function getCountryTimeseries(name: string, variant: "medium" | "high" | "low" = "medium") {
   const country = COUNTRIES.find(c => c.name.toLowerCase() === name.toLowerCase() || c.iso3.toLowerCase() === name.toLowerCase());
   if (!country) return null;
-  const annual = isPilotCountry(country.iso3);
-  const years = annual ? [...YEARS.filter(year => year < FIRST_YEAR), ...Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i)] : YEARS;
+  const years = [...YEARS.filter(year => year < FIRST_YEAR), ...Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i)];
   return {
     name: country.name,
     type: "country" as const,
     continent: country.continent,
     data: years.map(year => {
       const population = countryPopulation(country, year, year, variant);
-      return { year, population, populationMillions: population / 1000, isProjection: annual ? year >= PROJECTION_START : year > 2024 };
+      return { year, population, populationMillions: population / 1000, isProjection: year >= PROJECTION_START };
     }),
   };
 }

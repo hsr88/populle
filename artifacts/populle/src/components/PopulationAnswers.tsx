@@ -18,12 +18,10 @@ export function comparisonAnswer(year: number): string {
   const period = year < PROJECTION_START ? "UN estimates" : "UN medium projections";
   return `${period} for 1 July ${year} put India at ${number.format(Number(millions(india)))} million people and Europe at ${millions(europe)} million. India’s population was ${(india / europe).toFixed(2)} times Europe’s on that basis.`;
 }
-export function venezuelaAnswer(year: number, variant: PopulationVariant = "medium"): string {
-  const value = population("VEN", year, variant);
+export function countryAnswer(year: number, value: number, previous?: number, variant: PopulationVariant = "medium"): string {
   const label = year < PROJECTION_START ? "UN estimate" : `UN ${variant} projection`;
   const first = `${label} for 1 July ${year}: ${number.format(value)} people.`;
-  if (year === FIRST_YEAR) return first;
-  const previous = population("VEN", year - 1, variant);
+  if (previous === undefined || year === FIRST_YEAR) return first;
   const delta = value - previous;
   return `${first} ${number.format(Math.abs(delta))} ${delta >= 0 ? "more" : "fewer"} than in ${year - 1} (${delta >= 0 ? "+" : "−"}${Math.abs(delta / previous * 100).toFixed(2)}%).`;
 }
@@ -54,17 +52,17 @@ export function BirthYearForm() {
   </form>;
 }
 
-export function VenezuelaAnswer({ year, variant = "medium" }: { year: number; variant?: PopulationVariant }) {
+export function CountryAnswer({ text }: { text: string }) {
   return <div className="mt-4 space-y-2">
-    <p className="max-w-xl text-lg tabular-nums">{venezuelaAnswer(year, variant)}</p>
+    <p className="max-w-xl text-lg tabular-nums">{text}</p>
     <Source />
   </div>;
 }
 
 export function IndiaEuropeHistory() {
   const [year, setYear] = useState(EDITION_YEAR);
-  const width = 640, height = 230;
-  const x = (y: number) => 51 + (y - FIRST_YEAR) / (EDITION_YEAR - FIRST_YEAR) * 565;
+  // Grid and data share a scalable plot. Axis labels remain in CSS pixels.
+  const x = (y: number) => (y - FIRST_YEAR) / (EDITION_YEAR - FIRST_YEAR) * 100;
   const y = (people: number) => 197 - people / 1_500_000_000 * 165;
   const points = (region: "IND" | "Europe", years: number[]) => years.map(t => `${x(t).toFixed(1)},${y(population(region, t)).toFixed(1)}`).join(" ");
   return <section className="my-5 max-w-3xl space-y-4">
@@ -72,19 +70,19 @@ export function IndiaEuropeHistory() {
     <figure className="rounded-xl border border-white/15 bg-background/70 p-3 sm:p-5">
       <figcaption className="font-semibold">India overtook Europe in {crossoverYear}</figcaption>
       <p className="mt-1 text-sm text-muted-foreground">Mid-year population in millions. Solid lines show estimates through 2023. Dashed lines show medium projections from 2024.</p>
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`India first exceeded Europe’s population in ${crossoverYear}. Annual figures are available in the table below.`} className="mt-2 w-full">
-        {[0, 500, 1000, 1500].map(tick => <g key={tick}>
-          <line x1="51" x2="616" y1={y(tick * 1e6)} y2={y(tick * 1e6)} stroke="#475569" strokeWidth=".7"/>
-          <text x="43" y={y(tick * 1e6) + 4} textAnchor="end" fill="#cbd5e1" fontSize="12">{tick}</text>
-        </g>)}
-        {[FIRST_YEAR, crossoverYear, EDITION_YEAR].map(t => <text key={t} x={x(t)} y="219" textAnchor="middle" fill="#cbd5e1" fontSize="13">{t}</text>)}
-        <line x1={x(crossoverYear)} x2={x(crossoverYear)} y1="29" y2="197" stroke="#94a3b8" strokeDasharray="3 5"/>
+      <div className="relative mb-6 ml-10 mr-4 h-[222px] text-xs text-slate-300" role="img" aria-label={`India first exceeded Europe’s population in ${crossoverYear}. Annual figures are available in the table below.`}>
+        {[0, 500, 1000, 1500].map(tick => <span key={tick} className="absolute right-full mr-2 -translate-y-1/2 tabular-nums" style={{ top: y(tick * 1e6) }}>{tick}</span>)}
+        {[FIRST_YEAR, crossoverYear, EDITION_YEAR].map(t => <span key={t} className="absolute bottom-0 -translate-x-1/2" style={{ left: x(t) + "%" }}>{t}</span>)}
+        <svg viewBox="0 0 100 200" preserveAspectRatio="none" className="absolute inset-x-0 top-0 h-[200px] w-full overflow-visible" aria-hidden="true">
+        {[0, 500, 1000, 1500].map(tick => <line key={tick} x1="0" x2="100" y1={y(tick * 1e6)} y2={y(tick * 1e6)} stroke="#475569" vectorEffect="non-scaling-stroke"/>)}
+        <line x1={x(crossoverYear)} x2={x(crossoverYear)} y1="29" y2="197" stroke="#94a3b8" strokeDasharray="3 5" vectorEffect="non-scaling-stroke"/>
         {(["IND", "Europe"] as const).map(region => <g key={region} fill="none" stroke={region === "IND" ? "#22d3ee" : "#fbbf24"} strokeWidth="3">
-          <polyline points={points(region, comparisonYears.filter(t => t < PROJECTION_START))}/>
-          <polyline strokeDasharray="4 3" points={points(region, comparisonYears.filter(t => t >= PROJECTION_START - 1))}/>
-          <circle cx={x(year)} cy={y(population(region, year))} r="4" fill="currentColor"/>
+          <polyline vectorEffect="non-scaling-stroke" points={points(region, comparisonYears.filter(t => t < PROJECTION_START))}/>
+          <polyline vectorEffect="non-scaling-stroke" strokeDasharray="4 3" points={points(region, comparisonYears.filter(t => t >= PROJECTION_START - 1))}/>
         </g>)}
-      </svg>
+        </svg>
+        {(["IND", "Europe"] as const).map(region => <span key={region} className="absolute size-2 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ left: x(year) + "%", top: y(population(region, year)), backgroundColor: region === "IND" ? "#22d3ee" : "#fbbf24" }}/>)}
+      </div>
       <div className="flex gap-6 text-sm"><span className="text-cyan-300">India</span><span className="text-amber-300">Europe</span></div>
       <label htmlFor="comparison-year" className="mt-4 block text-sm">Comparison year <strong>{year}</strong></label>
       <input id="comparison-year" type="range" min={FIRST_YEAR} max={EDITION_YEAR} value={year}
@@ -104,6 +102,6 @@ export function IndiaEuropeHistory() {
 
 export function PilotLinks() {
   return <nav aria-label="Explore population" className="flex flex-wrap gap-5 text-sm text-primary underline">
-    <a href={COMPARISON_PATH}>India vs Europe population</a><a href="/country/ven">Venezuela population</a><a href="/quiz">Population quiz</a>
+    <a href={COMPARISON_PATH}>India vs Europe population</a><a href="/country/ven">Venezuela population</a><a href="/map">Explore countries</a><a href="/cities">Largest cities</a><a href="/quiz">Population quiz</a>
   </nav>;
 }

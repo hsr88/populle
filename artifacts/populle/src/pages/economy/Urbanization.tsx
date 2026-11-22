@@ -6,6 +6,7 @@ export default function Urbanization() {
   return (
     <Layout>
       <SEO
+        noindex
         title="Urbanization | Populle - Urban Population Trends"
         description="Track global urbanization trends. See how cities grow and the percentage of population living in urban areas across countries and time."
         keywords="urbanization, urban population, city growth, urban trends, urban vs rural, urban demographics"

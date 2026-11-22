@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://populle.com/country/ven</loc></url>
   <!-- Main Pages -->
   <url>
     <loc>https://populle.com/</loc>
@@ -28,13 +27,13 @@
   </url>
   <url>
     <loc>https://populle.com/map</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://populle.com/cities</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-11-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -57,94 +56,181 @@
     <priority>0.7</priority>
   </url>
   
-  <!-- Demographics -->
-  <url>
-    <loc>https://populle.com/demographics/age-pyramid</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://populle.com/demographics/gender</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://populle.com/demographics/languages</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Economy -->
-  <url>
-    <loc>https://populle.com/economy/gdp</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://populle.com/economy/urbanization</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://populle.com/economy/density</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://populle.com/economy/migration</loc>
-    <lastmod>2026-09-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Country Pages (Top 50 by Population) -->
-  <url><loc>https://populle.com/country/chn</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://populle.com/country/ind</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://populle.com/country/usa</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://populle.com/country/idn</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/pak</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/bra</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/nga</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/bgd</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/rus</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/mex</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/jpn</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/eth</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/phl</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/egy</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/vnm</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/cod</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/tur</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/irn</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/deu</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/tha</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/gbr</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/fra</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/ita</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/zaf</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/tza</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/mmr</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/ken</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/kor</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/col</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/esp</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/arg</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/uga</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/ukr</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/irq</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/sdn</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/pol</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/can</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/mar</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/sau</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://populle.com/country/per</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  
+  <!-- Country population profiles -->
+  <url><loc>https://populle.com/country/afg</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ago</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/alb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/are</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/arg</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/arm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/aus</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/aut</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/aze</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bdi</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bel</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ben</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bfa</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bgd</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bgr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bhr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bih</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/blr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bol</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bra</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/btn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/bwa</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/caf</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/can</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/che</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/chl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/chn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/civ</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cmr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cod</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cog</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/col</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/com</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cpv</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cri</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cub</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cyp</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/cze</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/deu</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/dji</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/dnk</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/dom</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/dza</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ecu</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/egy</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/eri</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/esp</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/est</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/eth</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/fin</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/fji</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/fra</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gab</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gbr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/geo</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gha</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gin</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gmb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gnb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gnq</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/grc</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/gtm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/guy</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/hnd</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/hrv</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/hti</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/hun</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/idn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ind</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/irl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/irn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/irq</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/isl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/isr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ita</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/jam</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/jor</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/jpn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/kaz</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ken</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/kgz</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/khm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/kor</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/kwt</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lao</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lbn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lbr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lby</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lka</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lso</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ltu</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lux</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/lva</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mar</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mda</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mdg</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mdv</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mex</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mkd</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mli</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mlt</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mmr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mne</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mng</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/moz</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mrt</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mus</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mwi</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/mys</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nam</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ner</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nga</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nic</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nld</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nor</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/npl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/nzl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/omn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/pak</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/pan</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/per</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/phl</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/png</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/pol</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/prk</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/prt</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/pry</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/qat</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/rou</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/rus</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/rwa</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sau</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sdn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sen</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sgp</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/slb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sle</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/slv</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/som</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/srb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ssd</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/stp</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/sur</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/svk</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/svn</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/swe</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/swz</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/syc</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/syr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tcd</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tgo</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tha</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tjk</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tkm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tls</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ton</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tto</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tun</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tur</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/tza</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/uga</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ukr</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ury</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/usa</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/uzb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/ven</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/vnm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/vut</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/wsm</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/yem</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/zaf</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/zmb</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://populle.com/country/zwe</loc><lastmod>2026-11-22</lastmod></url>
+
   <!-- City Pages (Top 30 Megacities) -->
   <url><loc>https://populle.com/city/tokyo</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://populle.com/city/delhi</loc><lastmod>2026-09-19</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>

@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { Search, X, TrendingUp, TrendingDown, Minus, MapPin, ExternalLink } from 'lucide-react';
 
-interface SearchResult { name: string; continent: string; }
+interface SearchResult { id: string; name: string; continent: string; }
 
 export default function Cities() {
   const { year } = usePopulationState();
@@ -25,7 +25,8 @@ export default function Cities() {
   // Search state
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [selection, setSelection] = useState<Pick<SearchResult, 'id' | 'name'> | null>(null);
+  const selectedCity = selection?.name;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -73,16 +74,16 @@ export default function Cities() {
 
   const maxPop = data?.data?.[0]?.populationMillions || 50;
 
-  const selectCity = (name: string) => {
-    setSelectedCity(name);
-    setQuery(name);
+  const selectCity = (city: Pick<SearchResult, 'id' | 'name'>) => {
+    setSelection(city);
+    setQuery(city.name);
     setDropdownOpen(false);
   };
 
   const clearSearch = () => {
     setQuery('');
     setResults([]);
-    setSelectedCity(null);
+    setSelection(null);
     setDropdownOpen(false);
     inputRef.current?.focus();
   };
@@ -125,7 +126,7 @@ export default function Cities() {
                 ref={inputRef}
                 type="text"
                 value={query}
-                onChange={e => { setQuery(e.target.value); setSelectedCity(null); }}
+                onChange={e => { setQuery(e.target.value); setSelection(null); }}
                 onFocus={() => results.length > 0 && setDropdownOpen(true)}
                 placeholder="Search any city…"
                 className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 focus:bg-white/8 transition-colors"
@@ -150,7 +151,7 @@ export default function Cities() {
                   {results.map(r => (
                     <button
                       key={r.name}
-                      onClick={() => selectCity(r.name)}
+                      onClick={() => selectCity(r)}
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/8 text-left transition-colors"
                     >
                       <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
@@ -177,7 +178,7 @@ export default function Cities() {
 
         {/* Selected city detail card */}
         <AnimatePresence>
-          {selectedCity && (
+          {selection && (
             <motion.div
               key={selectedCity}
               initial={{ opacity: 0, y: -10 }}
@@ -242,7 +243,7 @@ export default function Cities() {
               )}
               
               <Link 
-                href={`/city/${selectedCity.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/city/${selection.id}`}
                 className="mt-4 inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm font-medium transition-colors"
               >
                 View full city profile <ExternalLink className="w-3.5 h-3.5" />
@@ -276,10 +277,6 @@ export default function Cities() {
                         ? 'bg-primary/15 border-primary/40'
                         : 'bg-white/5 hover:bg-white/8 border-white/5 hover:border-white/10'
                     }`}
-                    onClick={() => {
-                      if (isSelected) { setSelectedCity(null); setQuery(''); }
-                      else { selectCity(city.name); }
-                    }}
                   >
                     {/* Background bar */}
                     <div
@@ -297,7 +294,7 @@ export default function Cities() {
 
                       {/* Name + location */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-base text-white truncate leading-tight">{city.name}</h3>
+                        <h3 className="font-bold text-base text-white truncate leading-tight"><Link href={`/city/${city.id}`} className="hover:underline">{city.name}</Link></h3>
                         <p className="text-xs text-muted-foreground truncate">{city.country} · {city.continent}</p>
                       </div>
 
@@ -320,6 +317,10 @@ export default function Cities() {
                       )}
 
                       {/* Current population */}
+                      <button type="button" aria-expanded={isSelected} aria-label={`Population trend for ${city.name}`} className="rounded p-2 text-primary hover:bg-white/10" onClick={() => {
+                        if (isSelected) { setSelection(null); setQuery(''); }
+                        else selectCity(city);
+                      }}><TrendingUp className="size-4"/></button>
                       <div className="text-right shrink-0">
                         <div className="font-bold text-lg text-accent text-glow leading-tight">
                           {formatPopulation(city.populationMillions)}

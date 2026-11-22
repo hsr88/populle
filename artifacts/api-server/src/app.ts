@@ -16,10 +16,14 @@ app.use("/api", router);
 if (process.env.NODE_ENV === "production") {
   const frontendDist = path.join(process.cwd(), "artifacts/populle/dist/public");
   const countries = new Set(COUNTRIES.map(c => c.iso3.toLowerCase()));
-  const cities = new Set(CITIES.flatMap(c => [c.id, c.name.toLowerCase().replace(/\s+/g, "-")]));
-  const pages = new Set(["/story", "/globe", "/map", "/cities", "/compare", "/stats", "/about", "/faq", "/privacy",
-    "/demographics/age-pyramid", "/demographics/gender", "/demographics/languages",
+  const cityIds = new Map(CITIES.map(c => [c.id, c.id]));
+  for (const c of CITIES) {
+    cityIds.set(c.name.toLowerCase().replace(/\s+/g, "-"), c.id);
+    cityIds.set(c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""), c.id);
+  }
+  const previews = new Set(["/demographics/age-pyramid", "/demographics/gender", "/demographics/languages",
     "/economy/gdp", "/economy/urbanization", "/economy/density", "/economy/migration"]);
+  const pages = new Set(["/story", "/globe", "/map", "/cities", "/compare", "/stats", "/about", "/faq", "/privacy", ...previews]);
   const validStoryYear = (value: string) => /^\d{4}$/.test(value) && Number(value) >= 1920 && Number(value) <= 2025;
   app.get("/index.html", (_req, res) => res.redirect(301, "/"));
   app.use(express.static(frontendDist, { index: false, redirect: false }));
@@ -34,6 +38,11 @@ if (process.env.NODE_ENV === "production") {
     }
     const country = /^\/country\/([^/]+)$/.exec(pathname)?.[1];
     const city = /^\/city\/([^/]+)$/.exec(pathname)?.[1];
+    const cityId = city && cityIds.get(city);
+    if (cityId && cityId !== city) {
+      res.redirect(301, "/city/" + cityId + url.search);
+      return;
+    }
     const story = /^\/story\/(\d+)$/.exec(pathname)?.[1];
     const storyYear = url.searchParams.get("year");
     if (pathname === "/story" && storyYear && validStoryYear(storyYear)) {
@@ -43,7 +52,8 @@ if (process.env.NODE_ENV === "production") {
     let document: string | undefined;
     if (pathname === "/") document = "home";
     if (pathname === "/quiz") document = "quiz";
-    if (pathname === "/country/ven") document = "venezuela";
+    if (country && countries.has(country)) document = "country-" + country;
+    if (pathname === "/map" || pathname === "/cities") document = pathname.slice(1);
     if (pathname === COMPARISON_PATH && comparisonPath(url.searchParams) === COMPARISON_PATH) {
       if (url.searchParams.has("pair") || url.searchParams.has("mode")) {
         res.redirect(301, COMPARISON_PATH);
@@ -52,7 +62,7 @@ if (process.env.NODE_ENV === "production") {
       document = "contrast";
     }
     const known = document || pages.has(pathname) || pathname === COMPARISON_PATH ||
-      (country && countries.has(country)) || (city && cities.has(city)) || (story && validStoryYear(story));
+      cityId || (story && validStoryYear(story));
     if (!known) {
       res.set("X-Robots-Tag", "noindex").status(404).type("html").send(
         '<!doctype html><html lang="en"><meta charset="utf-8"><title>Page not found | Populle</title><main><h1>Page not found</h1><a href="/">Explore world population</a></main></html>'
@@ -63,6 +73,8 @@ if (process.env.NODE_ENV === "production") {
       res.redirect(301, encodeURI(pathname) + url.search);
       return;
     }
+    if (previews.has(pathname)) res.set("X-Robots-Tag", "noindex, follow");
+    if (cityId) res.set("Link", `<https://populle.com/city/${cityId}>; rel="canonical"`);
     res.sendFile(document ? path.join(frontendDist, ".pages", document + ".html") : path.join(frontendDist, "index.html"), { dotfiles: "allow" });
   });
 }

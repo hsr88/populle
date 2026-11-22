@@ -5,9 +5,10 @@ import { usePopulationState } from '@/context/PopulationContext';
 import { useGetCountryPopulation, useGetPopulationTimeseries } from '@workspace/api-client-react';
 import { LoadingScreen, ErrorState } from '@/components/ui/loading';
 import { formatPopulation, formatLargeNumber } from '@/lib/utils';
-import { SEO, generateDatasetJsonLd } from '@/components/SEO';
-import { hasAnnualData, isPilotCountry, population, PROJECTION_START, FIRST_YEAR } from '@workspace/population';
-import { VenezuelaAnswer, venezuelaAnswer } from '@/components/PopulationAnswers';
+import { SEO } from '@/components/SEO';
+import { hasAnnualData, population, PROJECTION_START, FIRST_YEAR, EDITION_YEAR } from '@workspace/population';
+import { CountryAnswer, countryAnswer } from '@/components/PopulationAnswers';
+import { CountryHistory, CountryOverview, countryDataset, countryTitle, profileYears, type CountrySnapshot } from '@/components/CountryProfile';
 import { formatYearFull } from '@/lib/timeUtils';
 import { getFlagUrl } from '@/lib/countryUtils';
 import {
@@ -71,11 +72,17 @@ const COUNTRY_EXTRAS: Record<string, { capital: string; area: number }> = {
 export default function Country() {
   const { iso3 } = useParams<{ iso3: string }>();
   const { year, variant } = usePopulationState();
+  const snapshot = useMemo(() => {
+    const json = document.getElementById('country-snapshot')?.textContent;
+    const data: CountrySnapshot | undefined = json ? JSON.parse(json) : undefined;
+    return data?.iso3 === iso3.toUpperCase() ? data : undefined;
+  }, [iso3]);
+  const initial = year === EDITION_YEAR && variant === 'medium' ? snapshot : undefined;
   
   const { data: countriesData, isLoading, isError, refetch } = useGetCountryPopulation({ year, variant });
   const { data: data2050 } = useGetCountryPopulation({ year: 2050, variant });
   const { data: tsData } = useGetPopulationTimeseries({
-    locations: countriesData?.data?.find(c => c.iso3 === iso3?.toUpperCase())?.name || '',
+    locations: iso3,
     type: 'country',
     variant,
   });
@@ -104,12 +111,12 @@ export default function Country() {
       year: pt.year,
       population: pt.populationMillions,
       estimate: !pt.isProjection ? pt.populationMillions : null,
-      projection: pt.isProjection || pt.year === (isPilotCountry(iso3.toUpperCase()) ? PROJECTION_START - 1 : 2024) ? pt.populationMillions : null,
+      projection: pt.isProjection || pt.year === PROJECTION_START - 1 ? pt.populationMillions : null,
     }));
-  }, [tsData, iso3]);
+  }, [tsData]);
 
-  if (isLoading) return <Layout><LoadingScreen message="Loading Country Data..." /></Layout>;
-  if (isError) return <Layout><ErrorState error={null} retry={() => refetch()} /></Layout>;
+  if (isLoading) return <Layout>{initial ? <CountryOverview snapshot={initial}/> : <LoadingScreen message="Loading Country Data..." />}</Layout>;
+  if (isError) return <Layout>{initial && <CountryOverview snapshot={initial}/>}<ErrorState error={null} retry={() => refetch()} /></Layout>;
   
   if (!country) {
     return (
@@ -126,7 +133,11 @@ export default function Country() {
     );
   }
 
-  const annualVenezuela = country.iso3 === "VEN" && hasAnnualData(year);
+  const series = tsData?.locations[0]?.data;
+  const previousPoint = series?.find(point => point.year === year - 1);
+  const previous = previousPoint ? Math.round(previousPoint.population * 1000) : initial?.previous;
+  const answer = hasAnnualData(year) ? countryAnswer(year, Math.round(country.population * 1000), previous, variant) : undefined;
+  const history = series?.filter(p => profileYears.includes(p.year)).map(p => ({ year: p.year, population: Math.round(p.population * 1000) })) ?? initial?.history;
   const extras = COUNTRY_EXTRAS[country.iso3];
   const worldShare = worldTotal > 0 ? (country.population / worldTotal * 100) : 0;
   const projection2050 = country2050 
@@ -137,14 +148,11 @@ export default function Country() {
   return (
     <Layout>
       <SEO
-        title={annualVenezuela ? `Venezuela Population ${year} | Populle` : `${country.name} Population ${year} | ${formatPopulation(country.populationMillions)} | Populle`}
-        description={annualVenezuela ? venezuelaAnswer(year, variant) : `${country.name} population in ${year}: ${formatPopulation(country.populationMillions)}. Explore historical data, future projections, density (${density}/km²), growth trends, and compare with other countries.`}
+        title={countryTitle(country.name, year)}
+        description={answer ?? `Historical population approximation for ${country.name} in ${year}. Explore the population history and the UN annual series from 1950.`}
         keywords={`${country.name} population, ${country.name} demographics, ${country.name} population ${year}, ${country.continent} population`}
         path={`/country/${country.iso3.toLowerCase()}`}
-        jsonLd={generateDatasetJsonLd(
-          `${country.name} Population Data`,
-          `Population statistics for ${country.name} from 1800 to 2100, including historical data and UN projections`
-        )}
+        jsonLd={countryDataset(country.iso3, country.name, variant)}
       />
 
       <div className="max-w-5xl mx-auto flex flex-col gap-6 pb-32">
@@ -166,7 +174,7 @@ export default function Country() {
               />
               <div>
                 <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h1 className="text-3xl md:text-4xl font-bold">{annualVenezuela ? `Venezuela population in ${year}` : country.name}</h1>
+                  <h1 className="text-3xl md:text-4xl font-bold">{country.name} population in {year}</h1>
                   {rank && (
                     <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-bold">
                       #{rank} among listed countries
@@ -200,7 +208,8 @@ export default function Country() {
             </div>
           </div>
 
-          {annualVenezuela && <VenezuelaAnswer year={year} variant={variant} />}
+          {answer ? <CountryAnswer text={answer}/> : <p className="mt-4">Historical population approximation before the UN annual series.</p>}
+          {history && <CountryHistory history={history}/>}
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
@@ -241,7 +250,7 @@ export default function Country() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold">Population History & Projections</h2>
-                <p className="text-sm text-muted-foreground mt-1">{isPilotCountry(country.iso3) ? `Historical approximations before ${FIRST_YEAR}. UN estimates through 2023 and ${variant} projections from 2024. Millions of people.` : 'From 1800 to 2100 (millions)'}</p>
+                <p className="text-sm text-muted-foreground mt-1">Historical approximations before {FIRST_YEAR}. UN estimates through 2023 and {variant} projections from 2024. Millions of people.</p>
               </div>
               <div className="flex items-center gap-4 text-xs">
                 <span className="flex items-center gap-1.5">
@@ -293,7 +302,7 @@ export default function Country() {
                     label={{ value: String(year), position: 'top', fontSize: 10, fill: '#06b6d4' }}
                   />
                   <ReferenceLine
-                    x={isPilotCountry(country.iso3) ? PROJECTION_START : 2025}
+                    x={PROJECTION_START}
                     stroke="rgba(255,255,255,0.2)"
                     strokeDasharray="2 2"
                   />

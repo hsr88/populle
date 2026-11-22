@@ -6,6 +6,7 @@ export default function AgePyramid() {
   return (
     <Layout>
       <SEO
+        noindex
         title="Age Pyramid | Populle - Population Demographics"
         description="Explore interactive age pyramids for countries worldwide. Visualize population structure by age and gender across different time periods."
         keywords="age pyramid, population pyramid, demographics, age structure, population by age, demographic visualization"

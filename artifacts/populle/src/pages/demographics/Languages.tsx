@@ -6,6 +6,7 @@ export default function LanguagesPage() {
   return (
     <Layout>
       <SEO
+        noindex
         title="World Languages | Populle - Language Distribution Map"
         description="Explore global language distribution. Visualize where languages are spoken and how linguistic diversity varies across regions."
         keywords="world languages, language map, linguistic diversity, language distribution, most spoken languages, language demographics"

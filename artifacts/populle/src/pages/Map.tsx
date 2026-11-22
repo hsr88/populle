@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'wouter';
 import { Layout } from '@/components/layout/Layout';
+import { CountryDirectory } from '@/components/CountryProfile';
 import { usePopulationState } from '@/context/PopulationContext';
 import { hasAnnualData, population } from '@workspace/population';
 import { useGetCountryPopulation } from '@workspace/api-client-react';
@@ -491,6 +492,7 @@ export default function MapPage() {
             )}
           </AnimatePresence>
         </div>
+        <CountryDirectory countries={data?.data ?? []}/>
       </div>
     </Layout>
   );
